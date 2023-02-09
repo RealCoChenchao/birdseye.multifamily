@@ -9,10 +9,29 @@
 #' @import shiny.router
 #' @import shiny.react
 #' @importFrom shiny.fluent Nav
+#' @importFrom dplyr tbl
 #' @import htmltools
 #' @import shiny.fluent
 #' @import plotly
 #' @import glue glue
+
+real_estate_db <- rcAppTools::rc_connect_db(
+  database = c("cre_fundamentals"),
+  type = c("pool")
+)
+
+metro_options <- dplyr::tbl(real_estate_db,
+                            "axio_property_market_sf") %>%
+  dplyr::select(text = marketname,
+                key = marketname) %>%
+  dplyr::distinct() %>%
+  dplyr::collect() %>%
+  jsonlite::toJSON(dataframe = "rows")
+
+metric_options <-  list(
+  list(key = "mean_effective_rent_per_sq_ft", text = "Rent"),
+  list(key = "mean_occupancy", text = "Occupancy"),
+  list(key = "mean_revenue_per_unit", text = "Revenue Per Unit"))
 
 makePage <- function (title, subtitle, contents) {
   tagList(div(
@@ -116,9 +135,9 @@ home_page <- makePage(
 )
 
 market_page <- makePage(
-  "This is a Fluent UI app built in Shiny",
-  "shiny.react + Fluent UI = shiny.fluent",
-  div(card2)
+  "Market Intelligence",
+  "Tracking Market Performance",
+  div(mod_market_info_ui("market_intelligence"))
 )
 
 compare_page <- makePage(

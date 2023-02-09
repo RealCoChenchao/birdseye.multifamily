@@ -7,6 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+#' @importFrom shinydashboard infoBoxOutput
 mod_dollar_infobox_ui <- function(id){
   tagList(
     infoBoxOutput(NS(id, "dollar_metric"))

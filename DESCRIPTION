@@ -6,25 +6,18 @@ Authors@R:
 Description: Multifamily performance tracking and opportunity exploring
     app.
 License: MIT + file LICENSE
+URL: https://github.com/RealCoChenchao/birdseye.multifamily
+BugReports: https://github.com/RealCoChenchao/birdseye.multifamily/issues
 Imports: 
-    aws.s3,
     config (>= 0.3.1),
     dplyr,
-    ggplot2,
     glue,
     golem (>= 0.3.5),
-    highcharter,
     htmltools,
+    jsonlite,
     leaflet,
-    leaflet.extras,
-    lubridate,
-    magrittr,
-    pins,
     plotly,
-    purrr,
-    raster,
-    rcGridTools,
-    rgdal,
+    rcAppTools,
     scales,
     sf,
     shiny (>= 1.7.4),
@@ -32,12 +25,7 @@ Imports:
     shiny.react,
     shiny.router,
     shinydashboard,
-    shinyWidgets,
-    stringr,
-    tibble,
-    tidyr,
-    waiter,
-    zoo
+    shinyWidgets
 Suggests: 
     spelling,
     testthat (>= 3.0.0)
@@ -46,5 +34,3 @@ Encoding: UTF-8
 Language: en-US
 LazyData: true
 RoxygenNote: 7.2.3
-URL: https://github.com/RealCoChenchao/birdseye.multifamily
-BugReports: https://github.com/RealCoChenchao/birdseye.multifamily/issues

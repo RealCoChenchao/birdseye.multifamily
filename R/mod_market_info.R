@@ -37,10 +37,9 @@ mod_market_info_ui <- function(id){
                                 )),
                               options = metric_options)),
     makesimpleCard(mod_pefm_infoboxes_ui(NS(id, "market"))),
-    makeCard("Market Performance Heatmap",
-             mod_market_heatmap_ui(NS(id, "market")),
-             size = 8,
-             style = "max-height: 1000px")
+    makesimpleCard(mod_market_heatmap_ui(NS(id, "market")),
+                   size = 8,
+                   style = "max-height: 1000px")
   )
 }
 
@@ -50,13 +49,32 @@ mod_market_info_ui <- function(id){
 mod_market_info_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-    national_pefm
-    market_pefm # this should already by a reactive
-    submarket_pefm
-    pefm_sf # this must be a sf object
-    mod_pefm_infoboxes_server("market", reactive({market_pefm}))
-    mod_market_heatmap_server("market", reactive({pefm_sf}), input$metric)
+    real_estate_db <- rcAppTools::rc_connect_db(
+      database = c("cre_fundamentals"),
+      type = c("pool")
+    )
+    national_pefm <- dplyr::collect(tbl(real_estate_db, "axio_national_stable_pefm"))
+    market_pefm <- dplyr::collect(tbl(real_estate_db, "axio_mkt_stable_pefm"))
+    mkt_geometry <- sf::read_sf(real_estate_db, "axio_markets")
 
+    market_pefm_sf <- market_pefm %>%
+      dplyr::left_join(mkt_geometry,
+                       by = c("marketname")) %>%
+      sf::st_as_sf()
+
+    pefm_table <- national_pefm
+    pefm_boundary <- market_pefm_sf
+    # if(length(observe(input$metro)) == 0){
+    #   pefm_table <- national_pefm
+    #   pefm_boundary <- market_pefm_sf
+    # }else{
+    #   market_pefm
+    #   submarket_pefm_sf
+    #   submarket_pefm <- dplyr::collect(tbl(real_estate_db, "axio_submkt_stable_pefm"))
+    # }
+
+    mod_pefm_infoboxes_server("market", reactive({pefm_table}))
+    mod_market_heatmap_server("market", reactive({pefm_boundary}), input$metric)
   })
 }
 

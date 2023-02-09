@@ -7,6 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+#' @importFrom leaflet leafletOutput
 mod_market_heatmap_ui <- function(id){
   ns <- NS(id)
   leafletOutput(NS(id, "metro_map"),
@@ -17,6 +18,8 @@ mod_market_heatmap_ui <- function(id){
 #' market_heatmap Server Functions
 #'
 #' @noRd
+#' @importFrom leaflet renderLeaflet
+#' @import leaflet
 mod_market_heatmap_server <- function(id, pefm_sf, selected_metric){
   moduleServer( id, function(input, output, session){
     ns <- session$ns

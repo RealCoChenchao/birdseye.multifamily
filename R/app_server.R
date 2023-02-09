@@ -6,5 +6,6 @@
 #' @noRd
 app_server <- function(input, output, session) {
   # Your application server logic
+  mod_market_info_server("market_intelligence")
   router$server(input, output, session)
 }
