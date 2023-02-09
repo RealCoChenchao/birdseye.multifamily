@@ -15,7 +15,7 @@ mod_market_info_ui <- function(id){
           Dropdown.shinyInput(NS(id, "metro"),
                               placeHolder = "Metro",
                               multiSelect = FALSE,
-                              value = "176",
+                              # value = "Tucson, AZ",
                               dropdownWidth = 'auto',
                               styles = list(
                                 dropdownItemsWrapper = list(
@@ -36,8 +36,8 @@ mod_market_info_ui <- function(id){
                                   overflow = "auto"
                                 )),
                               options = metric_options)),
-    makesimpleCard(mod_pefm_infoboxes_ui(NS(id, "market"))),
-    makesimpleCard(mod_market_heatmap_ui(NS(id, "market")),
+    makesimpleCard(mod_pefm_infoboxes_ui(NS(id, "market_box"))),
+    makesimpleCard(mod_market_heatmap_ui(NS(id, "market_map")),
                    size = 8,
                    style = "max-height: 1000px")
   )
@@ -49,32 +49,45 @@ mod_market_info_ui <- function(id){
 mod_market_info_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+
     real_estate_db <- rcAppTools::rc_connect_db(
       database = c("cre_fundamentals"),
-      type = c("pool")
-    )
+      type = c("pool"))
     national_pefm <- dplyr::collect(tbl(real_estate_db, "axio_national_stable_pefm"))
     market_pefm <- dplyr::collect(tbl(real_estate_db, "axio_mkt_stable_pefm"))
     mkt_geometry <- sf::read_sf(real_estate_db, "axio_markets")
-
     market_pefm_sf <- market_pefm %>%
       dplyr::left_join(mkt_geometry,
                        by = c("marketname")) %>%
       sf::st_as_sf()
 
-    pefm_table <- national_pefm
-    pefm_boundary <- market_pefm_sf
-    # if(length(observe(input$metro)) == 0){
-    #   pefm_table <- national_pefm
-    #   pefm_boundary <- market_pefm_sf
-    # }else{
-    #   market_pefm
-    #   submarket_pefm_sf
-    #   submarket_pefm <- dplyr::collect(tbl(real_estate_db, "axio_submkt_stable_pefm"))
-    # }
+    pefm_table <- reactive({
+      if(length(input$metro) == 0){
+        pefm_table <- national_pefm
+      }else{
+        pefm_table <- dplyr::filter(market_pefm, marketname == input$metro)
+      }
+    })
 
-    mod_pefm_infoboxes_server("market", reactive({pefm_table}))
-    mod_market_heatmap_server("market", reactive({pefm_boundary}), input$metric)
+    pefm_boundary <- reactive({
+      if(length(input$metro) == 0){
+        pefm_boundary <- market_pefm_sf
+      }else{
+        submkt_geometry <- sf::read_sf(real_estate_db,
+                                    query = glue("SELECT * FROM axio_submarkets WHERE marketname = '{input$metro}'"))
+        submarket_pefm <- tbl(real_estate_db, "axio_submkt_stable_pefm") %>%
+          dplyr::filter(marketname == !!input$metro) %>%
+          dplyr::collect()
+        pefm_boundary <- submarket_pefm %>%
+          dplyr::left_join(submkt_geometry,
+                           by = c("marketname" = "marketname",
+                                  "submarket" = "submarketn")) %>%
+          sf::st_as_sf()
+      }
+    })
+
+    mod_pefm_infoboxes_server("market_box", pefm_table)
+    mod_market_heatmap_server("market_map", pefm_boundary, input$metric)
   })
 }
 

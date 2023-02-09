@@ -24,7 +24,6 @@ mod_pefm_infoboxes_ui <- function(id){
 mod_pefm_infoboxes_server <- function(id, pefm_df){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-
     mod_pct_infobox_server("occupancy", "Occupancy", pefm_df()$mean_occupancy)
     mod_dollar_infobox_server("rent", "Effective Rent", pefm_df()$mean_effective_rent_per_sq_ft)
     mod_dollar_infobox_server("revenue", "Revenue Per Unit", pefm_df()$mean_revenue_per_unit)
