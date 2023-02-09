@@ -11,7 +11,7 @@ mod_pefm_infoboxes_ui <- function(id){
   ns <- NS(id)
   Stack(
     horizontal = TRUE,
-    tokens = list(childrenGap = 200),
+    tokens = list(childrenGap = 100),
     mod_dollar_infobox_ui(NS(id, "rent")),
     mod_pct_infobox_ui(NS(id, "occupancy")),
     mod_dollar_infobox_ui(NS(id, "revenue"))
