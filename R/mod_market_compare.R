@@ -20,7 +20,7 @@ mod_market_compare_ui <- function(id){
     Label("Add Metro to the right line chart", className = "my_class"),
     Dropdown.shinyInput(NS(id, "metro"),
                         placeHolder = "Metro",
-                        multiSelect = FALSE,
+                        multiSelect = TRUE,
                         # value = "Tucson, AZ",
                         dropdownWidth = 'auto',
                         styles = list(

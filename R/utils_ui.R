@@ -69,7 +69,7 @@ navigation <- Nav(
     list(links = list(
       list(name = 'Home', url = '#!/', key = 'home', icon = 'Home'),
       list(name = 'Market Intelligence', url = '#!/market', key = 'market', icon = 'MapLayers'),
-      list(name = 'Comparing Markets', url = '#!/compare', key = 'compare', icon = 'BIDashboard'),
+      list(name = 'Market Comparison', url = '#!/compare', key = 'compare', icon = 'BIDashboard'),
       list(name = 'Opportunity Lens', url = '#!/opportunity', key = 'opportunity', icon = 'FunnelChart'),
       list(name = 'USAA Real Estate', url = 'https://www.usrealco.com/', key = 'realco', icon = 'WebAppBuilderFragment')
     ))
@@ -141,9 +141,9 @@ market_page <- makePage(
 )
 
 compare_page <- makePage(
-  "This is a Fluent UI app built in Shiny",
-  "shiny.react + Fluent UI = shiny.fluent",
-  div(card3)
+  "Market Comparison",
+  "Comparing Markets Performance",
+  div(mod_market_compare_ui("market_compare"))
 )
 
 router <- make_router(
