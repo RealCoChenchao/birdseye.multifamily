@@ -54,7 +54,9 @@ mod_market_info_server <- function(id){
       database = c("cre_fundamentals"),
       type = c("pool"))
     national_pefm <- dplyr::collect(tbl(real_estate_db, "axio_national_stable_pefm"))
-    market_pefm <- dplyr::collect(tbl(real_estate_db, "axio_mkt_stable_pefm"))
+    market_pefm <- tbl(real_estate_db, "axio_mkt_stable_pefm") %>%
+      dplyr::filter(month == max(month)) %>%
+      dplyr::collect()
     mkt_geometry <- sf::read_sf(real_estate_db, "axio_markets")
     market_pefm_sf <- market_pefm %>%
       dplyr::left_join(mkt_geometry,
@@ -76,7 +78,8 @@ mod_market_info_server <- function(id){
         submkt_geometry <- sf::read_sf(real_estate_db,
                                     query = glue("SELECT * FROM axio_submarkets WHERE marketname = '{input$metro}'"))
         submarket_pefm <- tbl(real_estate_db, "axio_submkt_stable_pefm") %>%
-          dplyr::filter(marketname == !!input$metro) %>%
+          dplyr::filter(marketname == !!input$metro,
+                        month == max(month)) %>%
           dplyr::collect()
         pefm_boundary <- submarket_pefm %>%
           dplyr::left_join(submkt_geometry,
