@@ -8,11 +8,14 @@
 #'
 #' @importFrom shiny NS tagList
 #' @importFrom leaflet leafletOutput
+#' @importFrom stringr str_detect
+#' @importFrom stringr str_to_title
+#' @importFrom stringr str_replace_all
 mod_market_heatmap_ui <- function(id){
   ns <- NS(id)
   leafletOutput(NS(id, "metro_map"),
-                width = 1200,
-                height = 800)
+                height = 750,
+                width = "100%")
 }
 
 #' market_heatmap Server Functions

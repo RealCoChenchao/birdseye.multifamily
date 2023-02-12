@@ -11,10 +11,13 @@ mod_pefm_infoboxes_ui <- function(id){
   ns <- NS(id)
   Stack(
     horizontal = TRUE,
-    tokens = list(childrenGap = 100),
-    mod_dollar_infobox_ui(NS(id, "rent")),
-    mod_pct_infobox_ui(NS(id, "occupancy")),
-    mod_dollar_infobox_ui(NS(id, "revenue"))
+    tokens = list(childrenGap = 20),
+    makesimpleCard(mod_dollar_infobox_ui(NS(id, "rent"))),
+    makesimpleCard(mod_pct_infobox_ui(NS(id, "occupancy"))),
+    makesimpleCard(mod_dollar_infobox_ui(NS(id, "revenue"))),
+    makesimpleCard(mod_pct_infobox_ui(NS(id, "rent_growth_3month"))),
+    makesimpleCard(mod_pct_infobox_ui(NS(id, "rent_growth_6month"))),
+    makesimpleCard(mod_pct_infobox_ui(NS(id, "rent_growth_12month")))
   )
 }
 
@@ -27,6 +30,9 @@ mod_pefm_infoboxes_server <- function(id, pefm_df){
     mod_pct_infobox_server("occupancy", "Occupancy", pefm_df()$mean_occupancy)
     mod_dollar_infobox_server("rent", "Effective Rent", pefm_df()$mean_effective_rent_per_sq_ft)
     mod_dollar_infobox_server("revenue", "Revenue Per Unit", pefm_df()$mean_revenue_per_unit)
+    mod_pct_infobox_server("rent_growth_3month", "3-Month Rent Growth", pefm_df()$mean_effective_rent_per_sf_3_month_growth)
+    mod_pct_infobox_server("rent_growth_6month", "6-Month Rent Growth", pefm_df()$mean_effective_rent_per_sf_6_month_growth)
+    mod_pct_infobox_server("rent_growth_12month", "12-Month Rent Growth", pefm_df()$mean_effective_rent_per_sf_12_month_growth)
   })
 }
 

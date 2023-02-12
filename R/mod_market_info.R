@@ -10,9 +10,10 @@
 mod_market_info_ui <- function(id){
   Stack(
     tokens = list(childrenGap = 10),
+    mod_pefm_infoboxes_ui(NS(id, "market_box")),
     Stack(horizontal = TRUE,
-          tokens = list(childrenGap = 10),
-          Dropdown.shinyInput(NS(id, "metro"),
+          tokens = list(childrenGap = 500),
+          makesimpleCard(Dropdown.shinyInput(NS(id, "metro"),
                               placeHolder = "Metro",
                               multiSelect = FALSE,
                               # value = "Tucson, AZ",
@@ -23,11 +24,11 @@ mod_market_info_ui <- function(id){
                                   maxHeight = "200px",
                                   overflow = "auto"
                                 )),
-                              options = metro_options),
-          Dropdown.shinyInput(NS(id, "metric"),
+                              options = metro_options)),
+          makesimpleCard(Dropdown.shinyInput(NS(id, "metric"),
                               placeHolder = "Metric",
                               multiSelect = FALSE,
-                              value = "mean_revenue_per_unit",
+                              value = "mean_effective_rent_per_sf_1_month_growth",
                               dropdownWidth = 'auto',
                               styles = list(
                                 dropdownItemsWrapper = list(
@@ -35,11 +36,9 @@ mod_market_info_ui <- function(id){
                                   maxHeight = "200px",
                                   overflow = "auto"
                                 )),
-                              options = metric_options)),
-    makesimpleCard(mod_pefm_infoboxes_ui(NS(id, "market_box"))),
-    makesimpleCard(mod_market_heatmap_ui(NS(id, "market_map")),
-                   size = 8,
-                   style = "max-height: 1000px")
+                              options = metric_options))),
+    makesimpleCard(div(style = "max-height: 750px; overflow: auto",
+                   mod_market_heatmap_ui(NS(id, "market_map"))))
   )
 }
 

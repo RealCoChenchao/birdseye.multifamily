@@ -5,6 +5,7 @@
 #' @return The return value, if any, from executing the utility.
 #'
 #' @noRd
+#' @import tidyverse
 #' @importFrom shiny selectInput
 #' @import shiny.router
 #' @import shiny.react
@@ -13,7 +14,8 @@
 #' @import htmltools
 #' @import shiny.fluent
 #' @import plotly
-#' @import glue glue
+#' @importFrom  glue glue
+#' @importFrom magrittr %>%
 
 real_estate_db <- rcAppTools::rc_connect_db(
   database = c("cre_fundamentals"),

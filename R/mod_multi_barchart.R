@@ -7,6 +7,9 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+#' @importFrom highcharter highchartOutput
+#' @importFrom highcharter renderHighchart
+#' @importFrom highcharter hchart
 mod_multi_barchart_ui <- function(id){
   ns <- NS(id)
   highchartOutput(NS(id, "barchart"))

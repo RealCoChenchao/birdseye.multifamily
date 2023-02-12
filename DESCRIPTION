@@ -9,15 +9,26 @@ License: MIT + file LICENSE
 URL: https://github.com/RealCoChenchao/birdseye.multifamily
 BugReports: https://github.com/RealCoChenchao/birdseye.multifamily/issues
 Imports: 
+    aws.s3,
     config (>= 0.3.1),
     dplyr,
+    ggplot2,
     glue,
     golem (>= 0.3.5),
+    highcharter,
     htmltools,
     jsonlite,
     leaflet,
+    leaflet.extras,
+    lubridate,
+    magrittr,
+    pins,
     plotly,
+    purrr,
+    raster,
     rcAppTools,
+    rcGridTools,
+    rgdal,
     scales,
     sf,
     shiny (>= 1.7.4),
@@ -25,7 +36,12 @@ Imports:
     shiny.react,
     shiny.router,
     shinydashboard,
-    shinyWidgets
+    shinyWidgets,
+    stringr,
+    tibble,
+    tidyr,
+    waiter,
+    zoo
 Suggests: 
     spelling,
     testthat (>= 3.0.0)

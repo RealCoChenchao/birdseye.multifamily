@@ -45,7 +45,20 @@ mod_market_compare_ui <- function(id){
                size = 8,
                style = "max-height: 320px")
     ),
-    mod_rank_table_ui(NS(id, "rank_table"))
+    makeCard("Market Performance Rank (Stablized Property)",
+             mod_rank_table_ui(NS(id, "rank_table")),
+             size = 8,
+             style = "max-height: 400px; overflow: auto"),
+    # Label("Add Metro to the right line chart", className = "my_class"),
+    makeCard("Market Performance by % of 2+ Bedroom Units",
+             mod_multi_barchart_ui(NS(id, "unit_dist")),
+             size = 8,
+             style = "max-height: 400px; overflow: auto"),
+    makeCard("Market Performance by Urban vs Suburban",
+             mod_multi_barchart_ui(NS(id, "urban_dist")),
+             size = 8,
+             style = "max-height: 400px; overflow: auto"),
+
   )
 }
 
