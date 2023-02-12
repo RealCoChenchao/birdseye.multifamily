@@ -7,6 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+#' @importFrom DT dataTableOutput
 mod_rank_table_ui <- function(id){
   ns <- NS(id)
   DT::dataTableOutput(NS(id, "rank_table"))
@@ -15,6 +16,7 @@ mod_rank_table_ui <- function(id){
 #' rank_table Server Functions
 #'
 #' @noRd
+#' @importFrom DT datatable
 mod_rank_table_server <- function(id, pefm_table){
   moduleServer( id, function(input, output, session){
     ns <- session$ns

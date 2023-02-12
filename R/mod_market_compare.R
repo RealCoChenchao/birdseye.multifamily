@@ -17,19 +17,35 @@ mod_market_compare_ui <- function(id){
       DatePicker.shinyInput(NS(id, "fromDate"), value = as.Date('2020/01/01'), label = "From date"),
       DatePicker.shinyInput(NS(id, "toDate"), value = as.Date('2020/12/31'), label = "To date")
     ),
-    Label("Add Metro to the right line chart", className = "my_class"),
-    Dropdown.shinyInput(NS(id, "metro"),
-                        placeHolder = "Metro",
-                        multiSelect = TRUE,
-                        # value = "Tucson, AZ",
-                        dropdownWidth = 'auto',
-                        styles = list(
-                          dropdownItemsWrapper = list(
-                            root = list(width = "10vw"),
-                            maxHeight = "200px",
-                            overflow = "auto"
-                          )),
-                        options = metro_options)
+    Label("Pick the Metric; Add Metro to the right chart", className = "my_class"),
+    Stack(
+      horizontal = TRUE,
+      tokens = list(childrenGap = 10),
+      Dropdown.shinyInput(NS(id, "metric"),
+                          placeHolder = "Metric",
+                          multiSelect = FALSE,
+                          value = "mean_effective_rent_per_sf_1_month_growth",
+                          dropdownWidth = 'auto',
+                          styles = list(
+                            dropdownItemsWrapper = list(
+                              root = list(width = "10vw"),
+                              maxHeight = "200px",
+                              overflow = "auto"
+                            )),
+                          options = metric_options),
+      Dropdown.shinyInput(NS(id, "metro"),
+                          placeHolder = "Metro",
+                          multiSelect = TRUE,
+                          # value = "Tucson, AZ",
+                          dropdownWidth = 'auto',
+                          styles = list(
+                            dropdownItemsWrapper = list(
+                              root = list(width = "10vw"),
+                              maxHeight = "200px",
+                              overflow = "auto"
+                            )),
+                          options = metro_options)
+    )
   )
 
   fluentPage(
@@ -65,10 +81,44 @@ mod_market_compare_ui <- function(id){
 #' market_compare Server Functions
 #'
 #' @noRd
+#' @importFrom rcAnalyticalMF calc_axio_mkt_metric
 mod_market_compare_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+    real_estate_db <- rcAppTools::rc_connect_db(
+      database = c("cre_fundamentals"),
+      type = c("pool"))
 
+    # work on the rank DT table
+    pefm_rank <- reactive({
+      calc_axio_mkt_metric(start_month = input$fromDate,
+                           end_month = input$toDate,
+                           real_estate_db = real_estate_db) %>%
+        format_axio_mkt_metric_tbl()
+    })
+    mod_rank_table_server("rank_table", pefm_rank)
+
+    # work on the line chart
+    pefm_line <- reactive({
+      selectedMetro <- (
+        if (length(input$metro) > 0) input$metro
+        else c("Tucson, AZ")
+      )
+      tbl(real_estate_db, "axio_mkt_stable_pefm") %>%
+        dplyr::filter(
+          month >= !!input$fromDate,
+          month <= !!input$toDate,
+          marketname %in% !!selectedMetro
+        ) %>%
+        dplyr::collect()
+    })
+
+    mod_multi_linechart_server("linechart",
+                               pefm_line,
+                               month,
+                               mean_revenue_per_unit_1_month_growth,
+                               marketname)
+    # input$metric
   })
 }
 

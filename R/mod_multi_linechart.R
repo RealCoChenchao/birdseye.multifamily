@@ -7,6 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+#' @import ggplot2
 mod_multi_linechart_ui <- function(id){
   ns <- NS(id)
   plotOutput(NS(id, "linechart"))

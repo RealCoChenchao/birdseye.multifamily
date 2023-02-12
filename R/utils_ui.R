@@ -33,7 +33,8 @@ metro_options <- dplyr::tbl(real_estate_db,
 metric_options <-  list(
   list(key = "mean_effective_rent_per_sq_ft", text = "Rent"),
   list(key = "mean_occupancy", text = "Occupancy"),
-  list(key = "mean_revenue_per_unit", text = "Revenue Per Unit"))
+  list(key = "mean_revenue_per_unit", text = "Revenue Per Unit"),
+  list(key = "mean_revenue_per_unit_1_month_growth", text = "Revenue Per Unit 1-month Growth"))
 
 makePage <- function (title, subtitle, contents) {
   tagList(div(
