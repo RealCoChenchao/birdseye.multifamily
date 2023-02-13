@@ -14,9 +14,9 @@ mod_market_info_ui <- function(id){
     Stack(horizontal = TRUE,
           tokens = list(childrenGap = 500),
           makesimpleCard(Dropdown.shinyInput(NS(id, "metro"),
-                              placeHolder = "Metro",
+                              placeHolder = "National",
                               multiSelect = FALSE,
-                              # value = "Tucson, AZ",
+                              value = "National",
                               dropdownWidth = 'auto',
                               styles = list(
                                 dropdownItemsWrapper = list(
@@ -24,7 +24,8 @@ mod_market_info_ui <- function(id){
                                   maxHeight = "200px",
                                   overflow = "auto"
                                 )),
-                              options = metro_options)),
+                              options = jsonlite::toJSON(rbind(as.data.frame(list(text = "National", key = "National")),
+                                                               metro_options)))),
           makesimpleCard(Dropdown.shinyInput(NS(id, "metric"),
                               placeHolder = "Metric",
                               multiSelect = FALSE,
@@ -63,7 +64,7 @@ mod_market_info_server <- function(id){
       sf::st_as_sf()
 
     pefm_table <- reactive({
-      if(length(input$metro) == 0){
+      if(input$metro == "National"){
         pefm_table <- national_pefm
       }else{
         pefm_table <- dplyr::filter(market_pefm, marketname == input$metro)
@@ -71,7 +72,7 @@ mod_market_info_server <- function(id){
     })
 
     pefm_boundary <- reactive({
-      if(length(input$metro) == 0){
+      if(input$metro == "National"){
         pefm_boundary <- market_pefm_sf
       }else{
         submkt_geometry <- sf::read_sf(real_estate_db,
