@@ -29,6 +29,7 @@ mod_market_compare_ui <- function(id){
                           styles = list(
                             dropdownItemsWrapper = list(
                               root = list(width = "10vw"),
+                              root = list(width = "10vw"),
                               maxHeight = "200px",
                               overflow = "auto"
                             )),
@@ -37,8 +38,8 @@ mod_market_compare_ui <- function(id){
                           placeHolder = "Metro",
                           multiSelect = TRUE,
                           # value = "Tucson, AZ",
-                          dropdownWidth = 'auto',
                           styles = list(
+                            root = list(width = "10vw"),
                             dropdownItemsWrapper = list(
                               root = list(width = "10vw"),
                               maxHeight = "200px",
@@ -55,11 +56,11 @@ mod_market_compare_ui <- function(id){
       makeCard("Rank Filters",
                filters,
                size = 4,
-               style = "max-height: 320px;"),
+               style = "max-height: 400px;"),
       makeCard("Market Comparison",
                mod_multi_linechart_ui(NS(id, "linechart")),
                size = 8,
-               style = "max-height: 320px")
+               style = "max-height: 400px; overflow: auto")
     ),
     makeCard("Market Performance Rank (Stablized Property)",
              mod_rank_table_ui(NS(id, "rank_table")),
