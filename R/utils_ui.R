@@ -22,16 +22,8 @@ real_estate_db <- rcAppTools::rc_connect_db(
   type = c("pool")
 )
 
-# metro_options <- dplyr::tbl(real_estate_db,
-#                             "axio_property_market_sf") %>%
-#   dplyr::select(text = marketname,
-#                 key = marketname) %>%
-#   dplyr::distinct() %>%
-#   dplyr::collect() %>%
-#   jsonlite::toJSON(dataframe = "rows")
-
 metro_options <- dplyr::tbl(real_estate_db,
-                            "axio_submarkets") %>%
+                            "axio_mkt_stable_pefm") %>%
   dplyr::select(text = marketname,
                 key = marketname) %>%
   dplyr::distinct() %>%
