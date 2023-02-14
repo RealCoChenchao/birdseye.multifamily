@@ -17,7 +17,8 @@ mod_market_compare_ui <- function(id){
       DatePicker.shinyInput(NS(id, "fromDate"), value = as.Date('2020/01/01'), label = "From date"),
       DatePicker.shinyInput(NS(id, "toDate"), value = as.Date('2020/12/31'), label = "To date")
     ),
-    Label("Pick the Metric; Add Metro to the right chart", className = "my_class"),
+    Label("Pick the Metric; Add metro to the right chart", className = "my_class"),
+    Label("Maximum 5 selected metro for user experience purpose", className = "my_class"),
     Stack(
       horizontal = TRUE,
       tokens = list(childrenGap = 10),
@@ -102,7 +103,7 @@ mod_market_compare_server <- function(id){
     # work on the line chart
     pefm_line <- reactive({
       selectedMetro <- (
-        if (length(input$metro) > 0) input$metro
+        if (length(input$metro) > 0) input$metro[1:5]
         else c("Tucson, AZ")
       )
       tbl(real_estate_db, "axio_mkt_stable_pefm") %>%
