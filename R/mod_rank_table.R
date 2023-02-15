@@ -21,7 +21,7 @@ mod_rank_table_server <- function(id, pefm_table){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     output$rank_table <-
-      DT::renderDataTable(datatable(pefm_table()) %>%
+      DT::renderDataTable(datatable(pefm_table()$table) %>%
                             DT::formatPercentage(c("Rent Growth %",
                                                    "Occupancy Change %",
                                                    "Revenue Per Unit Growth %"),

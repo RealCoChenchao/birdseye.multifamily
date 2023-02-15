@@ -65,22 +65,22 @@ mod_market_compare_ui <- function(id){
     ),
     makeCard("Market Performance Rank (Stablized Property)",
              Pivot(
-               PivotItem(headerText = "Select Market Chart",  Label("Hello 2")),
-               PivotItem(headerText = "All Market Table", mod_rank_table_ui(NS(id, "rank_table")))
+               PivotItem(headerText = "Select Market Chart",  mod_multi_barchart_ui(NS(id, "overall_table"))),
+               PivotItem(headerText = "All Market Table", mod_rank_table_ui(NS(id, "overall_table")))
              ),
              size = 11.5,
              style = "max-height: 400px; overflow: auto"),
     makeCard("Market Performance by % of 2+ Bedroom Units",
              Pivot(
-               PivotItem(headerText = "Select Market Chart", mod_multi_barchart_ui(NS(id, "unit_dist"))),
-               PivotItem(headerText = "All Market Table", mod_rank_table_ui(NS(id, "unit_market_table")))
+               PivotItem(headerText = "Select Market Chart", mod_multi_barchart_ui(NS(id, "unit_market"))),
+               PivotItem(headerText = "All Market Table", mod_rank_table_ui(NS(id, "unit_market")))
              ),
              size = 11.5,
              style = "max-height: 400px; overflow: auto"),
     makeCard("Market Performance by Grade",
              Pivot(
-               PivotItem(headerText = "Select Market Chart", mod_multi_barchart_ui(NS(id, "urban_dist"))),
-               PivotItem(headerText = "All Market Table", mod_rank_table_ui(NS(id, "market_grade_table")))
+               PivotItem(headerText = "Select Market Chart", mod_multi_barchart_ui(NS(id, "market_grade"))),
+               PivotItem(headerText = "All Market Table", mod_rank_table_ui(NS(id, "market_grade")))
              ),
              size = 11.5,
              style = "max-height: 400px; overflow: auto"),
@@ -99,30 +99,56 @@ mod_market_compare_server <- function(id){
       database = c("cre_fundamentals"),
       type = c("pool"))
 
-    # work on the rank DT table
-    pefm_rank <- reactive({
-      calc_axio_mkt_metric(start_month = input$fromDate,
+    # work on the overall pefm table
+    pefm_overall <- reactive({
+      table <- calc_axio_mkt_metric(start_month = input$fromDate,
                            end_month = input$toDate,
                            groupby = "axio_market") %>%
         format_axio_mkt_metric_tbl()
+      return(list(table = table))
     })
-    mod_rank_table_server("rank_table", pefm_rank)
+    mod_rank_table_server("overall_table", pefm_overall)
+    # mod_multi_barchart_server("overall_table",
+    #                           pefm_overall %>%
+    #                             dplyr::select(
+    #                               `Data Cut` = property_unit_dist,
+    #                               Performance = mean_effective_rent_per_sf_period_growth,
+    #                               Market = marketname
+    #                             ))
 
+    # work on the unit pefm table
     pefm_unit_market <- reactive({
-      calc_axio_mkt_metric(start_month = input$fromDate,
-                           end_month = input$toDate,
-                           groupby = "combo_unit_market") %>%
-        format_axio_mkt_metric_tbl()
-    })
-    mod_rank_table_server("unit_market_table", pefm_unit_market)
+      selectedMetro <- (
+        if (length(input$metro) > 0) input$metro[1:5]
+        else c("Tucson, AZ")
+      )
 
+      pefm_tbl <- calc_axio_mkt_metric(start_month = input$fromDate,
+                           end_month = input$toDate,
+                           groupby = "combo_unit_market")
+
+      chart <- pefm_tbl %>%
+        dplyr::filter(marketname %in% !!selectedMetro) %>%
+        dplyr::select(
+          `Data Cut` = property_unit_dist,
+          Performance = mean_effective_rent_per_sf_period_growth,
+          Market = marketname
+        )
+      return(list(table = format_axio_mkt_metric_tbl(pefm_tbl),
+                  chart = chart))
+    })
+    mod_rank_table_server("unit_market", pefm_unit_market)
+    mod_multi_barchart_server("unit_market", pefm_unit_market)
+
+    # work on the grade pefm table
     pefm_market_grade <- reactive({
-      calc_axio_mkt_metric(start_month = input$fromDate,
+      table <- calc_axio_mkt_metric(start_month = input$fromDate,
                            end_month = input$toDate,
                            groupby = "combo_market_grade") %>%
         format_axio_mkt_metric_tbl()
+      return(list(table = table))
     })
-    mod_rank_table_server("market_grade_table", pefm_market_grade)
+    mod_rank_table_server("market_grade", pefm_market_grade)
 
     # work on the line chart
     pefm_line <- reactive({
