@@ -161,13 +161,32 @@ mod_market_compare_server <- function(id){
 
     # work on the grade pefm table
     pefm_market_grade <- reactive({
-      table <- calc_axio_mkt_metric(start_month = input$fromDate,
+      selectedMetro <- (
+        if (length(input$metro) > 0) input$metro[1:5]
+        else c("Tucson, AZ")
+      )
+
+      selectedMetric <- (
+        if (length(input$calc_metric) > 0) input$calc_metric
+        else c("mean_occupancy_period_change")
+      )
+
+      pefm_tbl <- calc_axio_mkt_metric(start_month = input$fromDate,
                            end_month = input$toDate,
-                           groupby = "combo_market_grade") %>%
-        format_axio_mkt_metric_tbl()
-      return(list(table = table))
+                           groupby = "combo_market_grade")
+
+      chart <- pefm_tbl %>%
+        dplyr::filter(marketname %in% !!selectedMetro) %>%
+        dplyr::select(
+          c("Data Cut" = "property_market_grade_new",
+            "Performance" = all_of(selectedMetric),
+            "Market" = "marketname"))
+
+      return(list(table = format_axio_mkt_metric_tbl(pefm_tbl),
+                  chart = chart))
     })
     mod_rank_table_server("market_grade", pefm_market_grade)
+    mod_multi_barchart_server("market_grade", pefm_market_grade)
 
     # work on the line chart
     pefm_line <- reactive({
