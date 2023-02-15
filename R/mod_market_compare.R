@@ -47,7 +47,21 @@ mod_market_compare_ui <- function(id){
                               overflow = "auto"
                             )),
                           options = metro_options)
-    )
+    ),
+    Label("Pick the Metric for Charts below", className = "my_class"),
+    Dropdown.shinyInput(NS(id, "calc_metric"),
+                        placeHolder = "Metric",
+                        multiSelect = FALSE,
+                        value = "mean_effective_rent_per_sf_period_growth",
+                        dropdownWidth = 'auto',
+                        styles = list(
+                          dropdownItemsWrapper = list(
+                            root = list(width = "10vw"),
+                            root = list(width = "10vw"),
+                            maxHeight = "200px",
+                            overflow = "auto"
+                          )),
+                        options = calc_metric_options)
   )
 
   fluentPage(
@@ -123,6 +137,11 @@ mod_market_compare_server <- function(id){
         else c("Tucson, AZ")
       )
 
+      selectedMetric <- (
+        if (length(input$calc_metric) > 0) input$calc_metric
+        else c("mean_occupancy_period_change")
+      )
+
       pefm_tbl <- calc_axio_mkt_metric(start_month = input$fromDate,
                            end_month = input$toDate,
                            groupby = "combo_unit_market")
@@ -130,10 +149,10 @@ mod_market_compare_server <- function(id){
       chart <- pefm_tbl %>%
         dplyr::filter(marketname %in% !!selectedMetro) %>%
         dplyr::select(
-          `Data Cut` = property_unit_dist,
-          Performance = mean_effective_rent_per_sf_period_growth,
-          Market = marketname
-        )
+          c("Data Cut" = "property_unit_dist",
+            "Performance" = all_of(selectedMetric),
+            "Market" = "marketname"))
+
       return(list(table = format_axio_mkt_metric_tbl(pefm_tbl),
                   chart = chart))
     })

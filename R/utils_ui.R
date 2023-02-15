@@ -36,6 +36,11 @@ metric_options <-  list(
   list(key = "mean_revenue_per_unit", text = "Revenue Per Unit"),
   list(key = "mean_revenue_per_unit_1_month_growth", text = "Revenue Per Unit 1-month Growth"))
 
+calc_metric_options <-  list(
+  list(key = "mean_effective_rent_per_sf_period_growth", text = "Rent Growth %"),
+  list(key = "mean_occupancy_period_change", text = "Occupancy Change %"),
+  list(key = "mean_revenue_per_unit_period_growth", text = "Revenue Per Unit Growth %"))
+
 makePage <- function (title, subtitle, contents) {
   tagList(div(
     class = "page-title",
