@@ -64,16 +64,25 @@ mod_market_compare_ui <- function(id){
                style = "max-height: 400px; overflow: auto")
     ),
     makeCard("Market Performance Rank (Stablized Property)",
-             mod_rank_table_ui(NS(id, "rank_table")),
+             Pivot(
+               PivotItem(headerText = "Select Market Chart",  Label("Hello 2")),
+               PivotItem(headerText = "All Market Table", mod_rank_table_ui(NS(id, "rank_table")))
+             ),
              size = 11.5,
              style = "max-height: 400px; overflow: auto"),
     # Label("Add Metro to the right line chart", className = "my_class"),
     makeCard("Market Performance by % of 2+ Bedroom Units",
-             mod_multi_barchart_ui(NS(id, "unit_dist")),
+             Pivot(
+               PivotItem(headerText = "Select Market Chart", mod_multi_barchart_ui(NS(id, "unit_dist"))),
+               PivotItem(headerText = "All Market Table", Label("Hello 2"))
+             ),
              size = 11.5,
              style = "max-height: 400px; overflow: auto"),
     makeCard("Market Performance by Urban vs Suburban",
-             mod_multi_barchart_ui(NS(id, "urban_dist")),
+             Pivot(
+               PivotItem(headerText = "Select Market Chart", mod_multi_barchart_ui(NS(id, "urban_dist"))),
+               PivotItem(headerText = "All Market Table", Label("Hello 2"))
+             ),
              size = 11.5,
              style = "max-height: 400px; overflow: auto"),
 
