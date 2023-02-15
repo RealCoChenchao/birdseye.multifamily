@@ -44,11 +44,11 @@ mod_market_heatmap_server <- function(id, pefm_sf, selected_metric){
         addTiles(urlTemplate = hybrid_layer, group = "Hybrid Map") %>%
         addPolygons(data = pefm_sf(),
                     fillColor = ~pal(pefm_sf()[[selected_metric]]),
+                    popup = ~popup_text,
                     weight = 0.6,
                     opacity = 1,
                     color = "grey",
                     fillOpacity = 0.8
-                    # ,popup = ~popup
                     ) %>%
         addLegend(data = pefm_sf(),
                   pal = pal,

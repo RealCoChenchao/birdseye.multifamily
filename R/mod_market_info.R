@@ -7,6 +7,9 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+#' @importFrom scales dollar
+#' @importFrom scales percent
+#' @importFrom tidyr replace_na
 mod_market_info_ui <- function(id){
   Stack(
     tokens = list(childrenGap = 10),
@@ -27,9 +30,9 @@ mod_market_info_ui <- function(id){
                               options = jsonlite::toJSON(rbind(as.data.frame(list(text = "National", key = "National")),
                                                                metro_options)))),
           makesimpleCard(Dropdown.shinyInput(NS(id, "metric"),
-                              placeHolder = "Metric",
+                              # placeHolder = "Metric",
                               multiSelect = FALSE,
-                              value = "mean_effective_rent_per_sf_1_month_growth",
+                              value = "mean_effective_rent_per_sq_ft",
                               dropdownWidth = 'auto',
                               styles = list(
                                 dropdownItemsWrapper = list(
@@ -75,7 +78,12 @@ mod_market_info_server <- function(id){
 
     pefm_boundary <- reactive({
       if(input$metro == "National"){
-        pefm_boundary <- market_pefm_sf
+        pefm_boundary <- market_pefm_sf %>%
+          dplyr:: mutate(popup_text = paste0("Market Name: ", tidyr::replace_na(marketname, "N/A"), "<br>",
+                                             "Average Effective Rent/SqFt: ", tidyr::replace_na(scales::dollar(mean_effective_rent_per_sq_ft, accuracy = 0.01), "N/A"), "<br>",
+                                             "Average Occupancy: ", tidyr::replace_na(percent(mean_occupancy, accuracy = 0.01), "N/A"), "<br>",
+                                             "Average Revenue/Unit: ", tidyr::replace_na(scales::dollar(mean_revenue_per_unit, accuracy = 1), "N/A"), "<br>",
+                                             "Average Revenue/Unit 1-Month Growth: ", tidyr::replace_na(percent(mean_revenue_per_unit_1_month_growth, accuracy = 0.01), "N/A")))
       }else{
         submkt_geometry <- sf::read_sf(real_estate_db,
                                     query = glue("SELECT * FROM axio_submarkets WHERE marketname = '{input$metro}'"))
@@ -87,7 +95,13 @@ mod_market_info_server <- function(id){
           dplyr::left_join(submkt_geometry,
                            by = c("marketname" = "marketname",
                                   "submarket" = "submarketn")) %>%
-          sf::st_as_sf()
+          sf::st_as_sf() %>%
+          dplyr:: mutate(popup_text = paste0("Market Name: ", tidyr::replace_na(marketname, "N/A"), "<br>",
+                                             "Submarket Name: ", tidyr::replace_na(submarket, "N/A"), "<br>",
+                                             "Average Effective Rent/SqFt: ", tidyr::replace_na(scales::dollar(mean_effective_rent_per_sq_ft, accuracy = 0.01), "N/A"), "<br>",
+                                             "Average Occupancy: ", tidyr::replace_na(percent(mean_occupancy, accuracy = 0.01), "N/A"), "<br>",
+                                             "Average Revenue/Unit: ", tidyr::replace_na(scales::dollar(mean_revenue_per_unit, accuracy = 1), "N/A"), "<br>",
+                                             "Average Revenue/Unit 1-Month Growth: ", tidyr::replace_na(percent(mean_revenue_per_unit_1_month_growth, accuracy = 0.01), "N/A")))
       }
     })
 

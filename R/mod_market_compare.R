@@ -95,7 +95,7 @@ mod_market_compare_server <- function(id){
     pefm_rank <- reactive({
       calc_axio_mkt_metric(start_month = input$fromDate,
                            end_month = input$toDate,
-                           real_estate_db = real_estate_db) %>%
+                           groupby = "axio_market") %>%
         format_axio_mkt_metric_tbl()
     })
     mod_rank_table_server("rank_table", pefm_rank)
