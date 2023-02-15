@@ -70,18 +70,17 @@ mod_market_compare_ui <- function(id){
              ),
              size = 11.5,
              style = "max-height: 400px; overflow: auto"),
-    # Label("Add Metro to the right line chart", className = "my_class"),
     makeCard("Market Performance by % of 2+ Bedroom Units",
              Pivot(
                PivotItem(headerText = "Select Market Chart", mod_multi_barchart_ui(NS(id, "unit_dist"))),
-               PivotItem(headerText = "All Market Table", Label("Hello 2"))
+               PivotItem(headerText = "All Market Table", mod_rank_table_ui(NS(id, "unit_market_table")))
              ),
              size = 11.5,
              style = "max-height: 400px; overflow: auto"),
-    makeCard("Market Performance by Urban vs Suburban",
+    makeCard("Market Performance by Grade",
              Pivot(
                PivotItem(headerText = "Select Market Chart", mod_multi_barchart_ui(NS(id, "urban_dist"))),
-               PivotItem(headerText = "All Market Table", Label("Hello 2"))
+               PivotItem(headerText = "All Market Table", mod_rank_table_ui(NS(id, "market_grade_table")))
              ),
              size = 11.5,
              style = "max-height: 400px; overflow: auto"),
@@ -109,6 +108,22 @@ mod_market_compare_server <- function(id){
     })
     mod_rank_table_server("rank_table", pefm_rank)
 
+    pefm_unit_market <- reactive({
+      calc_axio_mkt_metric(start_month = input$fromDate,
+                           end_month = input$toDate,
+                           groupby = "combo_unit_market") %>%
+        format_axio_mkt_metric_tbl()
+    })
+    mod_rank_table_server("unit_market_table", pefm_unit_market)
+
+    pefm_market_grade <- reactive({
+      calc_axio_mkt_metric(start_month = input$fromDate,
+                           end_month = input$toDate,
+                           groupby = "combo_market_grade") %>%
+        format_axio_mkt_metric_tbl()
+    })
+    mod_rank_table_server("market_grade_table", pefm_market_grade)
+
     # work on the line chart
     pefm_line <- reactive({
       selectedMetro <- (
@@ -123,7 +138,6 @@ mod_market_compare_server <- function(id){
         ) %>%
         dplyr::collect()
     })
-
     mod_multi_linechart_server("linechart",
                                pefm_line,
                                month,
