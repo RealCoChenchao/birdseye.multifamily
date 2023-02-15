@@ -22,31 +22,13 @@ real_estate_db <- rcAppTools::rc_connect_db(
   type = c("pool")
 )
 
-# metro_options <- dplyr::tbl(real_estate_db,
-#                             "axio_mkt_stable_pefm") %>%
-#   dplyr::select(text = marketname,
-#                 key = marketname) %>%
-#   dplyr::distinct() %>%
-#   arrange(text) %>%
-#   dplyr::collect()
-
-metro_options_1 <- dplyr::tbl(real_estate_db,
-           "axio_mkt_stable_pefm") %>%
-  dplyr::select(marketname) %>%
+metro_options <- dplyr::tbl(real_estate_db,
+                            "axio_mkt_stable_pefm") %>%
+  dplyr::select(text = marketname,
+                key = marketname) %>%
   dplyr::distinct() %>%
-  dplyr::collect() %>%
-  dplyr::pull(marketname)
-
-metro_options_2 <- dplyr::tbl(real_estate_db,
-                              "axio_submarkets") %>%
-  dplyr::select(marketname) %>%
-  dplyr::distinct() %>%
-  dplyr::collect() %>%
-  dplyr::pull(marketname)
-
-metro_options <- as.data.frame(list(text = intersect(metro_options_1, metro_options_2),
-                                    key = intersect(metro_options_1, metro_options_2))) %>%
-  arrange(text)
+  arrange(text) %>%
+  dplyr::collect()
 
 metric_options <-  list(
   list(key = "mean_effective_rent_per_sq_ft", text = "Rent"),
