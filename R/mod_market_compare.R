@@ -133,8 +133,7 @@ mod_market_compare_server <- function(id){
         dplyr::select(
           c("Data Cut" = "marketname",
             "Performance" = all_of(selectedMetric),
-            "Market" = "marketname")) %>%
-        dplyr::mutate(Performance = Performance * 100)
+            "Market" = "marketname"))
 
       return(list(table = format_axio_mkt_metric_tbl(pefm_tbl),
                   chart = chart))
@@ -166,8 +165,7 @@ mod_market_compare_server <- function(id){
         dplyr::select(
           c("Data Cut" = "property_unit_dist",
             "Performance" = all_of(selectedMetric),
-            "Market" = "marketname")) %>%
-        dplyr::mutate(Performance = Performance * 100)
+            "Market" = "marketname"))
 
       return(list(table = format_axio_mkt_metric_tbl(pefm_tbl),
                   chart = chart))
@@ -199,8 +197,7 @@ mod_market_compare_server <- function(id){
         dplyr::select(
           c("Data Cut" = "property_market_grade_new",
             "Performance" = all_of(selectedMetric),
-            "Market" = "marketname")) %>%
-        dplyr::mutate(Performance = Performance * 100)
+            "Market" = "marketname"))
 
       return(list(table = format_axio_mkt_metric_tbl(pefm_tbl),
                   chart = chart))

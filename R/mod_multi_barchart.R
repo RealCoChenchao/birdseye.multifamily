@@ -24,7 +24,8 @@ mod_multi_barchart_server <- function(id, pefm_cut){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     output$barchart <- renderHighchart({
-      hchart(pefm_cut()$chart, "column",
+      hchart(pefm_cut()$chart %>%
+               dplyr::mutate(Performance = Performance * 100), "column",
              hcaes(x = `Data Cut`,
                    y = Performance,
                    group = Market)) %>%
