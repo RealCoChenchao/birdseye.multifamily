@@ -31,11 +31,14 @@ mod_opportunity_map_server <- function(id, selected_opportunity){
         addTiles(urlTemplate = transport_layer, group = "Transit Map") %>%
         addTiles(urlTemplate = hybrid_layer, group = "Hybrid Map") %>%
         addNegativeRentPropertyMarker(sf_data = selected_opportunity()) %>%
-        addTiles(urlTemplate = "", attribution = "") %>% # removes ugly attribution text.
-        addLayersControl(
-          baseGroups = c("Street Map", "Satellite Map", "Transit Map"),
-          options = layersControlOptions(collapsed = TRUE)
-        )
+        addTiles(urlTemplate = "", attribution = "") %>%
+        addLayersControl(baseGroups = c("Contrast Map",
+                                        "Street Map",
+                                        "Satellite Map",
+                                        "Transit Map",
+                                        "Hybrid Map"),
+                         position = "topright",
+                         options = layersControlOptions(collapsed = FALSE))
     })
   })
 }

@@ -20,10 +20,23 @@ mod_opportunity_table_server <- function(id, pefm_table){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     output$opportunity_table <-
-      DT::renderDataTable(datatable(pefm_table()) %>%
-                            DT::formatPercentage(c("Rent Growth %",
-                                                   "Occupancy Change %",
-                                                   "Revenue Per Unit Growth %"),
+      DT::renderDataTable(pefm_table() %>%
+                            sf::st_drop_geometry() %>%
+                            dplyr::select(
+                              name,
+                              address,
+                              city,
+                              state,
+                              zip,
+                              quantity,
+                              `Year Delivered` = delivered_year,
+                              `Lease-Up Month` = leaseup_month,
+                              `Rent Change From Lease-Up to Current` = effective_rent_pct_change_leaseup_current,
+                              `Rent Change During Lease-Up Against Market` = diff_to_market_effective_rent_leaseup_current
+                            ) %>%
+                            datatable() %>%
+                            DT::formatPercentage(c("Rent Change From Lease-Up to Current",
+                                                   "Rent Change During Lease-Up Against Market"),
                                                  2),
                           options = list(scrollX = TRUE),
                           rownames = FALSE)
