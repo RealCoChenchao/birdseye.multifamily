@@ -46,7 +46,7 @@ addNegativeRentPropertyMarker <- function(map, sf_data){
                                      "Year Delivered: ", delivered_year, "<br>",
                                      "Lease-Up Month: ", leaseup_month, "<br>",
                                      scales::percent(effective_rent_pct_change_leaseup_current, accuracy = 0.01), " Rent Change From Lease-Up to Current",
-                                     scales::percent(diff_to_market_effective_rent_leaseup_current, accuracy = 0.01), " Rent Change Against Market"))
+                                     scales::percent(diff_to_market_effective_rent_leaseup_current, accuracy = 0.01), " Rent Growth Difference From Lease-Up to Current VS Market"))
   } else {
     map
   }

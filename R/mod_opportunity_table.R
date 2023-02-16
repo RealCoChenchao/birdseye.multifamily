@@ -31,8 +31,8 @@ mod_opportunity_table_server <- function(id, pefm_table){
                               quantity,
                               `Year Delivered` = delivered_year,
                               `Lease-Up Month` = leaseup_month,
-                              `Rent Change From Lease-Up to Current` = effective_rent_pct_change_leaseup_current,
-                              `Rent Change During Lease-Up Against Market` = diff_to_market_effective_rent_leaseup_current
+                              `Rent Growth From Lease-Up to Current` = effective_rent_pct_change_leaseup_current,
+                              `Rent Growth Difference From Lease-Up to Current VS Market` = diff_to_market_effective_rent_leaseup_current
                             ) %>%
                             datatable() %>%
                             DT::formatPercentage(c("Rent Change From Lease-Up to Current",

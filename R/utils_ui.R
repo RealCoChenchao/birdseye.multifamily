@@ -30,6 +30,14 @@ metro_options <- dplyr::tbl(real_estate_db,
   dplyr::arrange(text) %>%
   dplyr::collect()
 
+recap_metro_options <- dplyr::tbl(real_estate_db,
+                                  "stablized_dev_property") %>%
+  dplyr::select(text = NAME,
+                key = GEOID) %>%
+  dplyr::distinct() %>%
+  dplyr::arrange(text) %>%
+  dplyr::collect()
+
 metric_options <-  list(
   list(key = "mean_effective_rent_per_sq_ft", text = "Rent"),
   list(key = "mean_occupancy", text = "Occupancy"),
