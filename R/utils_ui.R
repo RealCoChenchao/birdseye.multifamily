@@ -154,10 +154,17 @@ compare_page <- makePage(
   div(mod_market_compare_ui("market_compare"))
 )
 
+opportunity_page <- makePage(
+  "Opportunity Lens",
+  "Exploring Investment Opportunity Through Lenses",
+  div(mod_recap_opportunity_ui("opportunity_lens"))
+)
+
 router <- make_router(
   route("/", home_page),
   route("market", market_page),
-  route("compare", compare_page))
+  route("compare", compare_page),
+  route("opportunity", opportunity_page))
 
 shiny::addResourcePath("shiny.router", system.file("www", package = "shiny.router"))
 shiny_router_js_src <- file.path("shiny.router", "shiny.router.js")
