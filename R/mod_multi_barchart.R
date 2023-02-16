@@ -11,6 +11,7 @@
 #' @importFrom highcharter renderHighchart
 #' @importFrom highcharter hchart
 #' @importFrom highcharter hcaes
+#' @importFrom highcharter hc_yAxis
 mod_multi_barchart_ui <- function(id){
   ns <- NS(id)
   highchartOutput(NS(id, "barchart"))
@@ -26,7 +27,8 @@ mod_multi_barchart_server <- function(id, pefm_cut){
       hchart(pefm_cut()$chart, "column",
              hcaes(x = `Data Cut`,
                    y = Performance,
-                   group = Market))
+                   group = Market)) %>%
+        hc_yAxis(labels = list(format = "{value}%"))
     })
   })
 }

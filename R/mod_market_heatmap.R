@@ -31,8 +31,8 @@ mod_market_heatmap_server <- function(id, pefm_sf, selected_metric){
     hybrid_layer <- "http://mt0.google.com/vt/lyrs=y&hl=en&x={x}&y={y}&z={z}"
 
     output$metro_map <- renderLeaflet({
-      scale_max <- max(max(pefm_sf()[[selected_metric]], na.rm=TRUE),
-                       -min(pefm_sf()[[selected_metric]], na.rm=TRUE))
+      scale_max <- max(max(pefm_sf()[[selected_metric()]], na.rm=TRUE),
+                       -min(pefm_sf()[[selected_metric()]], na.rm=TRUE))
       pal <- colorNumeric(palette = "Spectral",
                           na.color = NA,
                           domain = c(-scale_max, scale_max))
@@ -43,7 +43,7 @@ mod_market_heatmap_server <- function(id, pefm_sf, selected_metric){
         addTiles(urlTemplate = transport_layer, group = "Transit Map") %>%
         addTiles(urlTemplate = hybrid_layer, group = "Hybrid Map") %>%
         addPolygons(data = pefm_sf(),
-                    fillColor = ~pal(pefm_sf()[[selected_metric]]),
+                    fillColor = ~pal(pefm_sf()[[selected_metric()]]),
                     popup = ~popup_text,
                     weight = 0.6,
                     opacity = 1,
@@ -52,11 +52,11 @@ mod_market_heatmap_server <- function(id, pefm_sf, selected_metric){
                     ) %>%
         addLegend(data = pefm_sf(),
                   pal = pal,
-                  title = str_to_title(str_replace_all(selected_metric, "_", " ")),
-                  values = ~pefm_sf()[[selected_metric]],
+                  title = str_to_title(str_replace_all(selected_metric(), "_", " ")),
+                  values = ~pefm_sf()[[selected_metric()]],
                   opacity = 0.8,
                   position = "bottomright",
-                  labFormat = ifelse(str_detect(selected_metric, "occupancy|growth"),
+                  labFormat = ifelse(str_detect(selected_metric(), "occupancy|growth"),
                                      labelFormat(suffix = "%", transform = function(x) 100 * x),
                                      labelFormat(prefix = "$"))) %>%
         addLayersControl(baseGroups = c("Contrast Map",

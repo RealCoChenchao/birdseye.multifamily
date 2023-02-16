@@ -23,9 +23,9 @@ mod_market_compare_ui <- function(id){
       horizontal = TRUE,
       tokens = list(childrenGap = 10),
       Dropdown.shinyInput(NS(id, "metric"),
-                          placeHolder = "Metric",
+                          # placeHolder = "Metric",
                           multiSelect = FALSE,
-                          value = "mean_effective_rent_per_sf_1_month_growth",
+                          value = "mean_revenue_per_unit_1_month_growth",
                           dropdownWidth = 'auto',
                           styles = list(
                             dropdownItemsWrapper = list(
@@ -49,7 +49,7 @@ mod_market_compare_ui <- function(id){
     ),
     Label("Pick the Metric for Charts below", className = "my_class"),
     Dropdown.shinyInput(NS(id, "calc_metric"),
-                        placeHolder = "Metric",
+                        # placeHolder = "Metric",
                         multiSelect = FALSE,
                         value = "mean_effective_rent_per_sf_period_growth",
                         dropdownWidth = 'auto',
@@ -121,7 +121,7 @@ mod_market_compare_server <- function(id){
 
       selectedMetric <- (
         if (length(input$calc_metric) > 0) input$calc_metric
-        else c("mean_occupancy_period_change")
+        else c("mean_effective_rent_per_sf_period_growth")
       )
 
       pefm_tbl <- calc_axio_mkt_metric(start_month = input$fromDate,
@@ -151,7 +151,7 @@ mod_market_compare_server <- function(id){
 
       selectedMetric <- (
         if (length(input$calc_metric) > 0) input$calc_metric
-        else c("mean_occupancy_period_change")
+        else c("mean_effective_rent_per_sf_period_growth")
       )
 
       pefm_tbl <- calc_axio_mkt_metric(start_month = input$fromDate,

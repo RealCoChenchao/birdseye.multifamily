@@ -17,7 +17,7 @@ mod_market_info_ui <- function(id){
     Stack(horizontal = TRUE,
           tokens = list(childrenGap = 500),
           makesimpleCard(Dropdown.shinyInput(NS(id, "metro"),
-                              placeHolder = "National",
+                              # placeHolder = "National",
                               multiSelect = FALSE,
                               value = "National",
                               dropdownWidth = 'auto',
@@ -105,8 +105,12 @@ mod_market_info_server <- function(id){
       }
     })
 
+    selected_metric <- reactive({
+      input$metric
+    })
+
     mod_pefm_infoboxes_server("market_box", pefm_table)
-    mod_market_heatmap_server("market_map", pefm_boundary, input$metric)
+    mod_market_heatmap_server("market_map", pefm_boundary, selected_metric)
   })
 }
 
