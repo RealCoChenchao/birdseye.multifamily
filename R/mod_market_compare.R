@@ -187,7 +187,7 @@ mod_market_compare_server <- function(id){
 
       selectedMetric <- (
         if (length(input$calc_metric) > 0) input$calc_metric
-        else c("mean_occupancy_period_change")
+        else c("mean_effective_rent_per_sf_period_growth")
       )
 
       pefm_tbl <- calc_axio_mkt_metric(start_month = input$fromDate,
