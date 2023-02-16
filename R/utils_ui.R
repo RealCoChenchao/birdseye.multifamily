@@ -16,27 +16,23 @@
 #' @import plotly
 #' @importFrom  glue glue
 #' @importFrom magrittr %>%
+#' @importFrom tibble tibble
 
 real_estate_db <- rcAppTools::rc_connect_db(
   database = c("cre_fundamentals"),
   type = c("pool")
 )
 
-metro_options <- dplyr::tbl(real_estate_db,
-                            "axio_mkt_stable_pefm") %>%
-  dplyr::select(text = marketname,
-                key = marketname) %>%
-  dplyr::distinct() %>%
-  dplyr::arrange(text) %>%
-  dplyr::collect()
-
-recap_metro_options <- dplyr::tbl(real_estate_db,
-                                  "stablized_dev_property") %>%
-  dplyr::select(text = NAME,
-                key = GEOID) %>%
-  dplyr::distinct() %>%
-  dplyr::arrange(text) %>%
-  dplyr::collect()
+metro_options <- dplyr::bind_rows(
+  tibble::tibble(text = "National", key = "National"),
+  dplyr::tbl(real_estate_db,
+             "axio_mkt_stable_pefm") %>%
+    dplyr::select(text = marketname,
+                  key = marketname) %>%
+    dplyr::distinct() %>%
+    dplyr::arrange(text) %>%
+    dplyr::collect()
+)
 
 metric_options <-  list(
   list(key = "mean_effective_rent_per_sq_ft", text = "Rent"),

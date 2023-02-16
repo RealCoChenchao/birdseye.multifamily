@@ -27,8 +27,7 @@ mod_market_info_ui <- function(id){
                                   maxHeight = "200px",
                                   overflow = "auto"
                                 )),
-                              options = jsonlite::toJSON(rbind(as.data.frame(list(text = "National", key = "National")),
-                                                               metro_options)))),
+                              options = metro_options)),
           makesimpleCard(Dropdown.shinyInput(NS(id, "metric"),
                               # placeHolder = "Metric",
                               multiSelect = FALSE,
