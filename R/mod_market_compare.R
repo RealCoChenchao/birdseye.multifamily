@@ -14,8 +14,8 @@ mod_market_compare_ui <- function(id){
     Stack(
       horizontal = TRUE,
       tokens = list(childrenGap = 10),
-      DatePicker.shinyInput(NS(id, "fromDate"), value = as.Date('2020/01/01'), label = "From date"),
-      DatePicker.shinyInput(NS(id, "toDate"), value = as.Date('2020/12/31'), label = "To date")
+      DatePicker.shinyInput(NS(id, "fromDate"), value = as.Date('2020/03/01'), label = "From date"),
+      DatePicker.shinyInput(NS(id, "toDate"), value = as.Date('2023/01/01'), label = "To date")
     ),
     Label("Pick the Metric; Add metro to the right chart", className = "my_class"),
     Label("Maximum 5 selected metro for user experience purpose", className = "my_class"),
@@ -38,7 +38,6 @@ mod_market_compare_ui <- function(id){
       Dropdown.shinyInput(NS(id, "metro"),
                           placeHolder = "Metro",
                           multiSelect = TRUE,
-                          # value = "Tucson, AZ",
                           styles = list(
                             root = list(width = "10vw"),
                             dropdownItemsWrapper = list(
@@ -117,7 +116,7 @@ mod_market_compare_server <- function(id){
     pefm_overall <- reactive({
       selectedMetro <- (
         if (length(input$metro) > 0) input$metro[1:5]
-        else c("Tucson, AZ")
+        else metro_options$text[1:5]
       )
 
       selectedMetric <- (
@@ -126,8 +125,8 @@ mod_market_compare_server <- function(id){
       )
 
       pefm_tbl <- calc_axio_mkt_metric(start_month = input$fromDate,
-                           end_month = input$toDate,
-                           groupby = "axio_market")
+                                       end_month = input$toDate,
+                                       groupby = "axio_market")
       chart <- pefm_tbl %>%
         dplyr::filter(marketname %in% !!selectedMetro) %>%
         dplyr::select(
@@ -136,7 +135,10 @@ mod_market_compare_server <- function(id){
             "Market" = "marketname"))
       return(list(table = format_axio_mkt_metric_tbl(pefm_tbl),
                   chart = chart))
-    })
+    }) %>%
+      bindCache(input$fromDate,
+                input$toDate,
+                input$metro)
     mod_rank_table_server("overall_table", pefm_overall)
     mod_multi_barchart_server("overall_table", pefm_overall)
 
@@ -144,7 +146,7 @@ mod_market_compare_server <- function(id){
     pefm_unit_market <- reactive({
       selectedMetro <- (
         if (length(input$metro) > 0) input$metro[1:5]
-        else c("Tucson, AZ")
+        else metro_options$text[1:5]
       )
 
       selectedMetric <- (
@@ -165,7 +167,10 @@ mod_market_compare_server <- function(id){
 
       return(list(table = format_axio_mkt_metric_tbl(pefm_tbl),
                   chart = chart))
-    })
+    }) %>%
+      bindCache(input$fromDate,
+                input$toDate,
+                input$metro)
     mod_rank_table_server("unit_market", pefm_unit_market)
     mod_multi_barchart_server("unit_market", pefm_unit_market)
 
@@ -173,7 +178,7 @@ mod_market_compare_server <- function(id){
     pefm_market_grade <- reactive({
       selectedMetro <- (
         if (length(input$metro) > 0) input$metro[1:5]
-        else c("Tucson, AZ")
+        else metro_options$text[1:5]
       )
 
       selectedMetric <- (
@@ -194,7 +199,10 @@ mod_market_compare_server <- function(id){
 
       return(list(table = format_axio_mkt_metric_tbl(pefm_tbl),
                   chart = chart))
-    })
+    }) %>%
+      bindCache(input$fromDate,
+                input$toDate,
+                input$metro)
     mod_rank_table_server("market_grade", pefm_market_grade)
     mod_multi_barchart_server("market_grade", pefm_market_grade)
 
@@ -202,7 +210,7 @@ mod_market_compare_server <- function(id){
     pefm_line <- reactive({
       selectedMetro <- (
         if (length(input$metro) > 0) input$metro[1:5]
-        else c("Tucson, AZ")
+        else metro_options$text[1:5]
       )
       tbl(real_estate_db, "axio_mkt_stable_pefm") %>%
         dplyr::filter(

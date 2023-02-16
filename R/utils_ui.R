@@ -27,7 +27,7 @@ metro_options <- dplyr::tbl(real_estate_db,
   dplyr::select(text = marketname,
                 key = marketname) %>%
   dplyr::distinct() %>%
-  arrange(text) %>%
+  dplyr::arrange(text) %>%
   dplyr::collect()
 
 metric_options <-  list(
