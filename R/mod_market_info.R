@@ -74,6 +74,7 @@ mod_market_info_server <- function(id){
       }else{
         pefm_table <- dplyr::filter(market_pefm, marketname == input$metro)
       }
+      pefm_table
     })
 
     pefm_boundary <- reactive({

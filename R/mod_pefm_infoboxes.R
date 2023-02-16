@@ -27,12 +27,12 @@ mod_pefm_infoboxes_ui <- function(id){
 mod_pefm_infoboxes_server <- function(id, pefm_df){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-    mod_pct_infobox_server("occupancy", "Occupancy", pefm_df()$mean_occupancy)
-    mod_dollar_infobox_server("rent", "Effective Rent", pefm_df()$mean_effective_rent_per_sq_ft)
-    mod_dollar_infobox_server("revenue", "Revenue Per Unit", pefm_df()$mean_revenue_per_unit)
-    mod_pct_infobox_server("rent_growth_3month", "3-Month Rent Growth", pefm_df()$mean_effective_rent_per_sf_3_month_growth)
-    mod_pct_infobox_server("rent_growth_6month", "6-Month Rent Growth", pefm_df()$mean_effective_rent_per_sf_6_month_growth)
-    mod_pct_infobox_server("rent_growth_12month", "12-Month Rent Growth", pefm_df()$mean_effective_rent_per_sf_12_month_growth)
+    mod_pct_infobox_server("occupancy", "Occupancy", reactive({pefm_df()$mean_occupancy}))
+    mod_dollar_infobox_server("rent", "Effective Rent", reactive({pefm_df()$mean_effective_rent_per_sq_ft}))
+    mod_dollar_infobox_server("revenue", "Revenue Per Unit", reactive({pefm_df()$mean_revenue_per_unit}))
+    mod_pct_infobox_server("rent_growth_3month", "3-Month Rent Growth", reactive({pefm_df()$mean_effective_rent_per_sf_3_month_growth}))
+    mod_pct_infobox_server("rent_growth_6month", "6-Month Rent Growth", reactive({pefm_df()$mean_effective_rent_per_sf_6_month_growth}))
+    mod_pct_infobox_server("rent_growth_12month", "12-Month Rent Growth", reactive({pefm_df()$mean_effective_rent_per_sf_12_month_growth}))
   })
 }
 

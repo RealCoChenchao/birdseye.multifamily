@@ -22,7 +22,7 @@ mod_dollar_infobox_server <- function(id, box_title, dollar_value){
     output$dollar_metric <- renderInfoBox({
       infoBox(
         box_title,
-        paste0(scales::dollar(dollar_value)),
+        paste0(scales::dollar(dollar_value())),
         icon = shiny::icon("dollar-sign"),
         color = "aqua",
         fill = TRUE

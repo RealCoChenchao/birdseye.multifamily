@@ -24,7 +24,7 @@ mod_pct_infobox_server <- function(id, box_title, pct_value){
     output$pct_metric <- renderInfoBox({
       infoBox(
         box_title,
-        paste0(round(pct_value*100, 2),"%"),
+        paste0(round(pct_value()*100, 2),"%"),
         icon = shiny::icon("building"),
         color = "aqua",
         fill = TRUE
