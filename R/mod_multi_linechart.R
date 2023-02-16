@@ -16,7 +16,7 @@ mod_multi_linechart_ui <- function(id){
 #' multi_linechart Server Functions
 #'
 #' @noRd
-mod_multi_linechart_server <- function(id, pefm_df, var_x, var_y, linetype_name){
+mod_multi_linechart_server <- function(id, pefm_df, var_x, var_y, linetype_name, y_axis_format){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     every_nth <- function(n) {
@@ -29,7 +29,7 @@ mod_multi_linechart_server <- function(id, pefm_df, var_x, var_y, linetype_name)
         geom_line(aes(color = {{ linetype_name }},
                       linetype = {{ linetype_name }}),
                   linewidth = 1.2) +
-        scale_y_continuous(labels = scales::percent) +
+        scale_y_continuous(labels = y_axis_format()) +
         scale_color_manual(values = c("#87864A", "#12395B", "#A2A4A3", "#086D94", "#6999AF")) +
         labs(x = "", y = "") +
         theme(plot.title = element_blank(),

@@ -7,6 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+#' @importFrom rlang sym
 mod_market_compare_ui <- function(id){
   ns <- NS(id)
   filters <- Stack(
@@ -132,7 +133,9 @@ mod_market_compare_server <- function(id){
         dplyr::select(
           c("Data Cut" = "marketname",
             "Performance" = all_of(selectedMetric),
-            "Market" = "marketname"))
+            "Market" = "marketname")) %>%
+        dplyr::mutate(Performance = Performance * 100)
+
       return(list(table = format_axio_mkt_metric_tbl(pefm_tbl),
                   chart = chart))
     }) %>%
@@ -163,7 +166,8 @@ mod_market_compare_server <- function(id){
         dplyr::select(
           c("Data Cut" = "property_unit_dist",
             "Performance" = all_of(selectedMetric),
-            "Market" = "marketname"))
+            "Market" = "marketname")) %>%
+        dplyr::mutate(Performance = Performance * 100)
 
       return(list(table = format_axio_mkt_metric_tbl(pefm_tbl),
                   chart = chart))
@@ -195,7 +199,8 @@ mod_market_compare_server <- function(id){
         dplyr::select(
           c("Data Cut" = "property_market_grade_new",
             "Performance" = all_of(selectedMetric),
-            "Market" = "marketname"))
+            "Market" = "marketname")) %>%
+        dplyr::mutate(Performance = Performance * 100)
 
       return(list(table = format_axio_mkt_metric_tbl(pefm_tbl),
                   chart = chart))
@@ -218,13 +223,22 @@ mod_market_compare_server <- function(id){
           month <= !!input$toDate,
           marketname %in% !!selectedMetro
         ) %>%
+        dplyr::select(month, marketname, pefm_line_metric = rlang::sym(!!input$metric)) %>%
         dplyr::collect()
     })
+
+    y_axis_format <- reactive({
+      ifelse(str_detect(input$metric, "occupancy|growth|change"),
+             scales::percent,
+             scales::dollar)
+    })
+
     mod_multi_linechart_server("linechart",
                                pefm_line,
                                month,
-                               mean_revenue_per_unit_1_month_growth,
-                               marketname)
+                               pefm_line_metric,
+                               marketname,
+                               y_axis_format)
     # input$metric
   })
 }
