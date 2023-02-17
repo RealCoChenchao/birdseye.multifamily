@@ -63,7 +63,7 @@ mod_recap_opportunity_server <- function(id){
     real_estate_db <- make_pool()
 
     stablized_dev_property <- sf::read_sf(real_estate_db,
-                                          query = "SELECT * FROM stablized_dev_property")
+                                          query = "SELECT * FROM unstablized_dev_property")
     selected_opportunity <- reactive({
 
       selectedMetro <- (
@@ -78,7 +78,7 @@ mod_recap_opportunity_server <- function(id){
 
       filtered_property <- stablized_dev_property %>%
         dplyr::filter(delivered_date >= input$fromDate,
-                      effective_rent_pct_change_leaseup_current <= selectedRentGrowth)
+                      effective_rent_pct_change <= selectedRentGrowth)
 
       if(selectedMetro != "National"){
         filtered_property <- filtered_property %>%
@@ -91,7 +91,7 @@ mod_recap_opportunity_server <- function(id){
     mod_opportunity_server("recap_opportunity", selected_opportunity)
 
     opportunity_summary <- reactive({
-      req(!is.null(selected_opportunity()))
+      req(dim(selected_opportunity())[1]!=0)
       if(input$metro == "National"){
         opportunity_summary <- selected_opportunity() %>%
           sf::st_drop_geometry() %>%
