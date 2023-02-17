@@ -60,9 +60,7 @@ mod_recap_opportunity_ui <- function(id){
 mod_recap_opportunity_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-    real_estate_db <- rcAppTools::rc_connect_db(
-      database = c("cre_fundamentals"),
-      type = c("pool"))
+    real_estate_db <- make_pool()
 
     stablized_dev_property <- sf::read_sf(real_estate_db,
                                           query = "SELECT * FROM stablized_dev_property")

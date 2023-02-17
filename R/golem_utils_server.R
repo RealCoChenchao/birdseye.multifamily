@@ -37,6 +37,13 @@ drop_nulls <- function(x) {
   }
 }
 
+
+#' Title
+#'
+#' @return
+#' @export
+#'
+#' @examples
 make_pool <- function(){
   pool::dbPool(
     drv      = RPostgres::Postgres(),

@@ -46,7 +46,7 @@ mod_market_compare_ui <- function(id){
                               maxHeight = "200px",
                               overflow = "auto"
                             )),
-                          options = metro_options)
+                          options = dplyr::filter(metro_options, key != "National"))
     ),
     Label("Pick the Metric for Charts below", className = "my_class"),
     Dropdown.shinyInput(NS(id, "calc_metric"),
@@ -109,9 +109,7 @@ mod_market_compare_ui <- function(id){
 mod_market_compare_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-    real_estate_db <- rcAppTools::rc_connect_db(
-      database = c("cre_fundamentals"),
-      type = c("pool"))
+    real_estate_db <- make_pool()
 
     # work on the overall pefm table
     pefm_overall <- reactive({

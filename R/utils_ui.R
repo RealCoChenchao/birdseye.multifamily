@@ -17,7 +17,8 @@
 #' @importFrom  glue glue
 #' @importFrom magrittr %>%
 #' @importFrom tibble tibble
-
+#' @importFrom paws rds
+#' @importFrom paws rds_build_auth_token
 real_estate_db <- make_pool()
 
 metro_options <- dplyr::bind_rows(
@@ -52,6 +53,7 @@ makePage <- function (title, subtitle, contents) {
   ),
   contents)
 }
+
 makeCard <- function(title, content, size = 12, style = "") {
   div(
     class = glue("card ms-depth-8 ms-sm{size} ms-xl{size}"),
@@ -94,7 +96,7 @@ navigation <- Nav(
 )
 
 header <- tagList(
-  img(src = "/www/usaa_logo.png", class = "logo"),
+  img(src = "www/usaa_logo.png", class = "logo"),
   # div(Text(variant = "xLarge", "RADR"), class = "title")
 )
 

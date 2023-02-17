@@ -23,6 +23,7 @@ Imports:
     leaflet.extras,
     lubridate,
     magrittr,
+    paws,
     pins,
     pkgload,
     plotly,
@@ -56,3 +57,6 @@ LazyData: true
 RoxygenNote: 7.2.3
 Depends: 
     tidyverse
+Remotes: 
+    https://github.com/RealCoForecast/rcAppTools.git,
+    https://github.com/entropic-rumble/txModelUtils.git

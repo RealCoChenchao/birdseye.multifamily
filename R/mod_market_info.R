@@ -52,9 +52,8 @@ mod_market_info_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    real_estate_db <- rcAppTools::rc_connect_db(
-      database = c("cre_fundamentals"),
-      type = c("pool"))
+    real_estate_db <- make_pool()
+
     national_pefm <- tbl(real_estate_db, "axio_national_stable_pefm") %>%
       dplyr::filter(month == max(month)) %>%
       dplyr::collect()

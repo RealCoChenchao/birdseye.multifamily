@@ -6,8 +6,13 @@ default:
   REALCO_CRE_HOST: !expr Sys.getenv("REALCO_CRE_HOST")
   REALCO_CRE_PORT: !expr Sys.getenv("REALCO_CRE_PORT")
   REALCO_CRE_USER: !expr Sys.getenv("REALCO_CRE_USER")
-  GITHUB_PAT: !expr Sys.getenv("GITHUB_PAT")
 production:
   app_prod: yes
 dev:
   golem_wd: !expr here::here()
+rsconnect:
+  REALCO_CRE_NAME: !expr Sys.getenv("REALCO_CRE_NAME")
+  REALCO_CRE_HOST: !expr Sys.getenv("REALCO_CRE_HOST")
+  REALCO_CRE_PORT: !expr Sys.getenv("REALCO_CRE_PORT")
+  REALCO_CRE_USER: !expr Sys.getenv("REALCO_CRE_USER")
+
