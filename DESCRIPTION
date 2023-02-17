@@ -12,6 +12,7 @@ Imports:
     aws.s3,
     config (>= 0.3.1),
     dplyr,
+    DT,
     ggplot2,
     glue,
     golem (>= 0.3.5),
@@ -23,12 +24,15 @@ Imports:
     lubridate,
     magrittr,
     pins,
+    pkgload,
     plotly,
     purrr,
     raster,
+    rcAnalyticalMF,
     rcAppTools,
     rcGridTools,
     rgdal,
+    rlang,
     scales,
     sf,
     shiny (>= 1.7.4),
@@ -50,3 +54,5 @@ Encoding: UTF-8
 Language: en-US
 LazyData: true
 RoxygenNote: 7.2.3
+Depends: 
+    tidyverse
