@@ -18,10 +18,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom tibble tibble
 
-real_estate_db <- rcAppTools::rc_connect_db(
-  database = c("cre_fundamentals"),
-  type = c("pool")
-)
+real_estate_db <- make_pool()
 
 metro_options <- dplyr::bind_rows(
   tibble::tibble(text = "National", key = "National"),

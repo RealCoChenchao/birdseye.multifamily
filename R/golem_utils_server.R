@@ -37,6 +37,20 @@ drop_nulls <- function(x) {
   }
 }
 
+make_pool <- function(){
+  pool::dbPool(
+    drv      = RPostgres::Postgres(),
+    dbname   = get_golem_config("REALCO_CRE_NAME"),
+    host     = get_golem_config("REALCO_CRE_HOST"),
+    port     = get_golem_config("REALCO_CRE_PORT"),
+    user     = get_golem_config("REALCO_CRE_USER"),
+    password = paws::rds()$build_auth_token(
+      endpoint = glue::glue("{get_golem_config('REALCO_CRE_HOST')}:{get_golem_config('REALCO_CRE_PORT')}"),
+      user     = get_golem_config("REALCO_CRE_USER"),
+      region   = "us-east-1"
+    )
+  )
+}
 #' If x is `NA`, return y, otherwise return x
 #'
 #' @param x,y Two elements to test, one potentially `NA`
