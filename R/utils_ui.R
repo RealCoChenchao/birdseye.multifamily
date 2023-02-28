@@ -32,11 +32,10 @@ metro_options <- dplyr::bind_rows(
     dplyr::collect()
 )
 
-metric_options <-  list(
-  list(key = "mean_effective_rent_per_sq_ft", text = "Rent"),
-  list(key = "mean_occupancy", text = "Occupancy"),
-  list(key = "mean_revenue_per_unit", text = "Revenue Per Unit"),
-  list(key = "mean_revenue_per_unit_1_month_growth", text = "Revenue Per Unit 1-month Growth"))
+metric_names <- names(dplyr::tbl(real_estate_db,"axio_mkt_stable_pefm"))
+metric_options <- tibble::tibble(text = str_to_title(str_replace_all(metric_names, "_", " ")),
+               key = metric_names) %>%
+  dplyr::filter(!key %in% c("month", "marketname"))
 
 calc_metric_options <-  list(
   list(key = "mean_effective_rent_per_sf_period_growth", text = "Rent Growth %"),
