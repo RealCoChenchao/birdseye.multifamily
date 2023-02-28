@@ -138,7 +138,8 @@ mod_market_compare_server <- function(id){
     }) %>%
       bindCache(input$fromDate,
                 input$toDate,
-                input$metro)
+                input$metro,
+                input$calc_metric)
     mod_rank_table_server("overall_table", pefm_overall)
     mod_multi_barchart_server("overall_table", pefm_overall)
 
@@ -170,7 +171,8 @@ mod_market_compare_server <- function(id){
     }) %>%
       bindCache(input$fromDate,
                 input$toDate,
-                input$metro)
+                input$metro,
+                input$calc_metric)
     mod_rank_table_server("unit_market", pefm_unit_market)
     mod_multi_barchart_server("unit_market", pefm_unit_market)
 
@@ -202,7 +204,8 @@ mod_market_compare_server <- function(id){
     }) %>%
       bindCache(input$fromDate,
                 input$toDate,
-                input$metro)
+                input$metro,
+                input$calc_metric)
     mod_rank_table_server("market_grade", pefm_market_grade)
     mod_multi_barchart_server("market_grade", pefm_market_grade)
 
