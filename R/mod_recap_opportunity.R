@@ -62,8 +62,25 @@ mod_recap_opportunity_server <- function(id){
     ns <- session$ns
     real_estate_db <- make_pool()
 
-    stablized_dev_property <- sf::read_sf(real_estate_db,
-                                          query = "SELECT * FROM unstablized_dev_property")
+    opportunity_property <- sf::read_sf(real_estate_db,
+                                        query = "SELECT * FROM unstablized_dev_property") %>%
+      dplyr::bind_rows(
+        sf::read_sf(real_estate_db,
+                    query = "SELECT
+                                name,
+                                address,
+                                city,
+                                state,
+                                zip,
+                                quantity,
+                                delivered_year,
+                                leaseup_month,
+                                effective_rent_pct_change_leaseup_current AS effective_rent_pct_change,
+                                diff_to_market_effective_rent_leaseup_current AS diff_to_market_effective_rent
+                              FROM
+                                stablized_dev_property")
+      )
+
     selected_opportunity <- reactive({
 
       selectedMetro <- (
@@ -76,7 +93,7 @@ mod_recap_opportunity_server <- function(id){
         else c(0)
       )
 
-      filtered_property <- stablized_dev_property %>%
+      filtered_property <- opportunity_property %>%
         dplyr::filter(delivered_date >= input$fromDate,
                       effective_rent_pct_change <= selectedRentGrowth)
 
