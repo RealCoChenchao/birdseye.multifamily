@@ -45,7 +45,7 @@ mod_market_heatmap_server <- function(id, pefm_sf, selected_metric){
         addPolygons(data = pefm_sf(),
                     fillColor = ~pal(pefm_sf()[[selected_metric()]]),
                     popup = ~popup_text,
-                    weight = 0.6,
+                    weight = 1,
                     opacity = 1,
                     color = "grey",
                     fillOpacity = 0.8

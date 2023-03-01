@@ -21,6 +21,7 @@ real_estate_db <- make_pool()
 
 metro_options <- dplyr::bind_rows(
   tibble::tibble(text = "National", key = "National"),
+  tibble::tibble(text = "National--Housing Platform", key = "Realco"),
   dplyr::tbl(real_estate_db,
              "axio_mkt_stable_pefm") %>%
     dplyr::select(text = marketname,

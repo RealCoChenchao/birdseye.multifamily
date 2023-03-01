@@ -51,3 +51,22 @@ addNegativeRentPropertyMarker <- function(map, sf_data){
     map
   }
 }
+
+addPopupTexts <- function(sf_df){
+  if(!"submarket" %in% names(sf_df)){
+    sf_df %>%
+      dplyr:: mutate(popup_text = paste0("Market Name: ", tidyr::replace_na(marketname, "N/A"), "<br>",
+                                         "Average Effective Rent/SqFt: ", tidyr::replace_na(scales::dollar(mean_effective_rent_per_sq_ft, accuracy = 0.01), "N/A"), "<br>",
+                                         "Average Occupancy: ", tidyr::replace_na(percent(mean_occupancy, accuracy = 0.01), "N/A"), "<br>",
+                                         "Average Revenue/Unit: ", tidyr::replace_na(scales::dollar(mean_revenue_per_unit, accuracy = 1), "N/A"), "<br>",
+                                         "Average Revenue/Unit 1-Month Growth: ", tidyr::replace_na(percent(mean_revenue_per_unit_1_month_growth, accuracy = 0.01), "N/A")))
+  }else{
+    sf_df %>%
+      dplyr:: mutate(popup_text = paste0("Market Name: ", tidyr::replace_na(marketname, "N/A"), "<br>",
+                                         "Submarket Name: ", tidyr::replace_na(submarket, "N/A"), "<br>",
+                                         "Average Effective Rent/SqFt: ", tidyr::replace_na(scales::dollar(mean_effective_rent_per_sq_ft, accuracy = 0.01), "N/A"), "<br>",
+                                         "Average Occupancy: ", tidyr::replace_na(percent(mean_occupancy, accuracy = 0.01), "N/A"), "<br>",
+                                         "Average Revenue/Unit: ", tidyr::replace_na(scales::dollar(mean_revenue_per_unit, accuracy = 1), "N/A"), "<br>",
+                                         "Average Revenue/Unit 1-Month Growth: ", tidyr::replace_na(percent(mean_revenue_per_unit_1_month_growth, accuracy = 0.01), "N/A")))
+  }
+}

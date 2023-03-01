@@ -54,6 +54,13 @@ mod_market_info_server <- function(id){
 
     real_estate_db <- make_pool()
 
+    googlesheets4::gs4_deauth()
+    googlesheets4::gs4_auth(cache = ".secrets",
+                            email = TRUE)
+    realco_housing_mkt <- googlesheets4::read_sheet("1jUt0Gs2AWdSBdFJl9FFd3mLEKjenPTbYAhkplQMc39c") %>%
+      dplyr::select(marketname) %>%
+      dplyr::distinct()
+
     national_pefm <- tbl(real_estate_db, "axio_national_stable_pefm") %>%
       dplyr::filter(month == max(month)) %>%
       dplyr::collect()
@@ -69,6 +76,13 @@ mod_market_info_server <- function(id){
     pefm_table <- reactive({
       if(input$metro == "National"){
         pefm_table <- national_pefm
+      }else if(input$metro == "Realco"){
+        pefm_table <- market_pefm %>%
+          dplyr::filter(marketname %in% realco_housing_mkt$marketname) %>%
+          dplyr::summarise(
+            across(where(is.numeric),
+                   mean)
+          )
       }else{
         pefm_table <- dplyr::filter(market_pefm, marketname == input$metro)
       }
@@ -77,12 +91,9 @@ mod_market_info_server <- function(id){
 
     pefm_boundary <- reactive({
       if(input$metro == "National"){
-        pefm_boundary <- market_pefm_sf %>%
-          dplyr:: mutate(popup_text = paste0("Market Name: ", tidyr::replace_na(marketname, "N/A"), "<br>",
-                                             "Average Effective Rent/SqFt: ", tidyr::replace_na(scales::dollar(mean_effective_rent_per_sq_ft, accuracy = 0.01), "N/A"), "<br>",
-                                             "Average Occupancy: ", tidyr::replace_na(percent(mean_occupancy, accuracy = 0.01), "N/A"), "<br>",
-                                             "Average Revenue/Unit: ", tidyr::replace_na(scales::dollar(mean_revenue_per_unit, accuracy = 1), "N/A"), "<br>",
-                                             "Average Revenue/Unit 1-Month Growth: ", tidyr::replace_na(percent(mean_revenue_per_unit_1_month_growth, accuracy = 0.01), "N/A")))
+        pefm_boundary <- addPopupTexts(market_pefm_sf)
+      }else if(input$metro == "Realco"){
+        pefm_boundary <- addPopupTexts(dplyr::filter(market_pefm_sf, marketname %in% realco_housing_mkt$marketname))
       }else{
         submkt_geometry <- sf::read_sf(real_estate_db,
                                     query = glue("SELECT * FROM axio_submarkets WHERE marketname = '{input$metro}'"))
@@ -95,12 +106,7 @@ mod_market_info_server <- function(id){
                            by = c("marketname" = "marketname",
                                   "submarket" = "submarketn")) %>%
           sf::st_as_sf() %>%
-          dplyr:: mutate(popup_text = paste0("Market Name: ", tidyr::replace_na(marketname, "N/A"), "<br>",
-                                             "Submarket Name: ", tidyr::replace_na(submarket, "N/A"), "<br>",
-                                             "Average Effective Rent/SqFt: ", tidyr::replace_na(scales::dollar(mean_effective_rent_per_sq_ft, accuracy = 0.01), "N/A"), "<br>",
-                                             "Average Occupancy: ", tidyr::replace_na(percent(mean_occupancy, accuracy = 0.01), "N/A"), "<br>",
-                                             "Average Revenue/Unit: ", tidyr::replace_na(scales::dollar(mean_revenue_per_unit, accuracy = 1), "N/A"), "<br>",
-                                             "Average Revenue/Unit 1-Month Growth: ", tidyr::replace_na(percent(mean_revenue_per_unit_1_month_growth, accuracy = 0.01), "N/A")))
+          addPopupTexts()
       }
     })
 
