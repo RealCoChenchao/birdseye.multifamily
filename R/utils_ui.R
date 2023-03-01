@@ -17,8 +17,6 @@
 #' @importFrom  glue glue
 #' @importFrom magrittr %>%
 #' @importFrom tibble tibble
-#' @importFrom paws rds
-#' @importFrom paws rds_build_auth_token
 real_estate_db <- make_pool()
 
 metro_options <- dplyr::bind_rows(
