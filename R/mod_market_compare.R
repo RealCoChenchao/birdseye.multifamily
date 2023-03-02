@@ -83,21 +83,21 @@ mod_market_compare_ui <- function(id){
                PivotItem(headerText = "All Market Table", mod_rank_table_ui(NS(id, "overall_table")))
              ),
              size = 11.5,
-             style = "max-height: 400px; overflow: auto"),
+             style = "max-height: 500px; overflow: auto"),
     makeCard("Market Performance by % of 2+ Bedroom Units",
              Pivot(
                PivotItem(headerText = "Select Market Chart", mod_multi_barchart_ui(NS(id, "unit_market"))),
                PivotItem(headerText = "All Market Table", mod_rank_table_ui(NS(id, "unit_market")))
              ),
              size = 11.5,
-             style = "max-height: 400px; overflow: auto"),
+             style = "max-height: 500px; overflow: auto"),
     makeCard("Market Performance by Grade",
              Pivot(
                PivotItem(headerText = "Select Market Chart", mod_multi_barchart_ui(NS(id, "market_grade"))),
                PivotItem(headerText = "All Market Table", mod_rank_table_ui(NS(id, "market_grade")))
              ),
              size = 11.5,
-             style = "max-height: 400px; overflow: auto"),
+             style = "max-height: 500px; overflow: auto"),
 
   )
 }
