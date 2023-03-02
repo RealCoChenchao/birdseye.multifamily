@@ -28,7 +28,9 @@ mod_multi_barchart_server <- function(id, pefm_cut, by_group = TRUE){
     if(by_group){
       output$barchart <- renderHighchart({
         hchart(pefm_cut()$chart %>%
-                 dplyr::mutate(Performance = round(Performance * 100, 2)), "column",
+                 dplyr::mutate(Performance = round(Performance * 100, 2)) %>%
+                 arrange(Market),
+               "column",
                hcaes(x = Market,
                      y = Performance,
                      group = `Data Cut`)) %>%
@@ -40,7 +42,9 @@ mod_multi_barchart_server <- function(id, pefm_cut, by_group = TRUE){
     }else{
       output$barchart <- renderHighchart({
         hchart(pefm_cut()$chart %>%
-                 dplyr::mutate(Performance = round(Performance * 100, 2)), "column",
+                 dplyr::mutate(Performance = round(Performance * 100, 2)) %>%
+                 arrange(Market),
+               "column",
                hcaes(x = Market,
                      y = Performance),
                tooltip = list(pointFormat = paste0("{point.Performance}%"))) %>%
