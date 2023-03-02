@@ -129,19 +129,19 @@ mod_market_compare_server <- function(id){
       chart <- pefm_tbl %>%
         dplyr::filter(marketname %in% !!selectedMetro) %>%
         dplyr::select(
-          c("Data Cut" = "marketname",
-            "Performance" = all_of(selectedMetric),
+          c("Performance" = all_of(selectedMetric),
             "Market" = "marketname"))
 
       return(list(table = format_axio_mkt_metric_tbl(pefm_tbl),
-                  chart = chart))
+                  chart = chart,
+                  metric = str_to_title(str_replace_all(selectedMetric, "_", " "))))
     }) %>%
       bindCache(input$fromDate,
                 input$toDate,
                 input$metro,
                 input$calc_metric)
     mod_rank_table_server("overall_table", pefm_overall)
-    mod_multi_barchart_server("overall_table", pefm_overall)
+    mod_multi_barchart_server("overall_table", pefm_overall, by_group = FALSE)
 
     # work on the unit pefm table
     pefm_unit_market <- reactive({
@@ -167,7 +167,8 @@ mod_market_compare_server <- function(id){
             "Market" = "marketname"))
 
       return(list(table = format_axio_mkt_metric_tbl(pefm_tbl),
-                  chart = chart))
+                  chart = chart,
+                  metric = str_to_title(str_replace_all(selectedMetric, "_", " "))))
     }) %>%
       bindCache(input$fromDate,
                 input$toDate,
@@ -200,7 +201,8 @@ mod_market_compare_server <- function(id){
             "Market" = "marketname"))
 
       return(list(table = format_axio_mkt_metric_tbl(pefm_tbl),
-                  chart = chart))
+                  chart = chart,
+                  metric = str_to_title(str_replace_all(selectedMetric, "_", " "))))
     }) %>%
       bindCache(input$fromDate,
                 input$toDate,

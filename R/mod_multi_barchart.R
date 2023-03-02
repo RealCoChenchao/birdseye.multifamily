@@ -11,6 +11,7 @@
 #' @importFrom highcharter renderHighchart
 #' @importFrom highcharter hchart
 #' @importFrom highcharter hcaes
+#' @importFrom highcharter hc_xAxis
 #' @importFrom highcharter hc_yAxis
 mod_multi_barchart_ui <- function(id){
   ns <- NS(id)
@@ -20,17 +21,31 @@ mod_multi_barchart_ui <- function(id){
 #' multi_barchart Server Functions
 #'
 #' @noRd
-mod_multi_barchart_server <- function(id, pefm_cut){
+mod_multi_barchart_server <- function(id, pefm_cut, by_group = TRUE){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-    output$barchart <- renderHighchart({
-      hchart(pefm_cut()$chart %>%
-               dplyr::mutate(Performance = round(Performance * 100, 2)), "column",
-             hcaes(x = `Data Cut`,
-                   y = Performance,
-                   group = Market)) %>%
-        hc_yAxis(labels = list(format = "{value}%"))
-    })
+    if(by_group){
+      output$barchart <- renderHighchart({
+        hchart(pefm_cut()$chart %>%
+                 dplyr::mutate(Performance = round(Performance * 100, 2)), "column",
+               hcaes(x = Market,
+                     y = Performance,
+                     group = `Data Cut`)) %>%
+          hc_xAxis(title = list(text = "")) %>%
+          hc_yAxis(title = list(text = pefm_cut()$metric),
+                   labels = list(format = "{value}%"))
+      })
+    }else{
+      output$barchart <- renderHighchart({
+        hchart(pefm_cut()$chart %>%
+                 dplyr::mutate(Performance = round(Performance * 100, 2)), "column",
+               hcaes(x = Market,
+                     y = Performance)) %>%
+          hc_xAxis(title = list(text = "")) %>%
+          hc_yAxis(title = list(text = pefm_cut()$metric),
+                   labels = list(format = "{value}%"))
+      })
+    }
   })
 }
 

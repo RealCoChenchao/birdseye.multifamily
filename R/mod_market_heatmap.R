@@ -31,11 +31,17 @@ mod_market_heatmap_server <- function(id, pefm_sf, selected_metric){
     hybrid_layer <- "http://mt0.google.com/vt/lyrs=y&hl=en&x={x}&y={y}&z={z}"
 
     output$metro_map <- renderLeaflet({
-      scale_max <- max(max(pefm_sf()[[selected_metric()]], na.rm=TRUE),
-                       -min(pefm_sf()[[selected_metric()]], na.rm=TRUE))
+      # scale_max <- max(max(pefm_sf()[[selected_metric()]], na.rm = TRUE),
+      #                  -min(pefm_sf()[[selected_metric()]], na.rm = TRUE))
+      # pal <- colorNumeric(palette = "Spectral",
+      #                     na.color = NA,
+      #                     domain = c(-scale_max, scale_max))
+
       pal <- colorNumeric(palette = "Spectral",
                           na.color = NA,
-                          domain = c(-scale_max, scale_max))
+                          domain = c(min(pefm_sf()[[selected_metric()]], na.rm = TRUE),
+                                     max(pefm_sf()[[selected_metric()]], na.rm = TRUE)))
+
       leaflet() %>%
         addProviderTiles(provider = "Stamen.TonerLite", group = "Contrast Map") %>%
         addProviderTiles(provider = "OpenStreetMap", group = "Street Map") %>%
