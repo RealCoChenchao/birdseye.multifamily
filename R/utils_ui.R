@@ -114,30 +114,31 @@ layout <- function(mainUI){
 }
 
 card1 <- makeCard(
-  "Welcome to 1!",
+  "Market Intelligence",
   div(
-    Text("shiny.fluent is a package that allows you to build Shiny apps using Microsoft's Fluent UI."),
-    Text("Use the menu on the left to explore live demos of all available components.")
+    Text("One stop to understand the rent growth, occupany change and revenue growth for a market")
   ))
 
 card2 <- makeCard(
-  "Welcome to 2!",
+  "Market Comparison",
   div(
-    Text("shiny.fluent is a package that allows you to build Shiny apps using Microsoft's Fluent UI."),
-    Text("Use the menu on the left to explore live demos of all available components.")
+    Text("Compare markets in a variety of combination of period and data cut")
   ))
 
 card3 <- makeCard(
-  "Welcome to 3!",
+  "Opportunity Lens",
   div(
-    Text("shiny.fluent is a package that allows you to build Shiny apps using Microsoft's Fluent UI."),
-    Text("Use the menu on the left to explore live demos of all available components.")
+    Text("Explore properties whose current rent is below what it is delivered")
   ))
 
+
 home_page <- makePage(
-  "This is a Fluent UI app built in Shiny",
-  "shiny.react + Fluent UI = shiny.fluent",
-  div(card1)
+  "This is a Shiny Application built for tracking multifamily performance",
+  "USAA Real Estate Research + Shiny = Multifamily Performance Dashboard",
+  Stack(horizontal = TRUE,
+        card1,
+        card2,
+        card3)
 )
 
 market_page <- makePage(
