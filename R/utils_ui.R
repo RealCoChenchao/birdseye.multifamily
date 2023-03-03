@@ -68,10 +68,6 @@ makesimpleCard <- function(content, size = 12, style = "") {
     class = glue("card ms-depth-8 ms-sm{size} ms-xl{size}"),
     style = style,
     content
-    # Stack(
-    #   tokens = list(childrenGap = 5),
-    #   content
-    # )
   )
 }
 navigation <- Nav(
