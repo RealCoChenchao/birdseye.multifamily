@@ -20,9 +20,14 @@ mod_count_barchart_server <- function(id, opportunity_summary){
     ns <- session$ns
     output$barchart <- renderHighchart({
 
-      hchart(opportunity_summary(), "column",
+      hchart(opportunity_summary() %>%
+               mutate(Region = fct_reorder(Region, Count, .desc = TRUE)) %>%
+               arrange(Region),
+             "column",
              hcaes(x = Region,
-                   y = Count))
+                   y = Count),
+             tooltip = list(pointFormat = paste0("Count: ", "{point.Count}")))
+
     })
   })
 }
