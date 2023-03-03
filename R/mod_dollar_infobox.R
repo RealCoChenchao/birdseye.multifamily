@@ -9,9 +9,7 @@
 #' @importFrom shiny NS tagList
 #' @importFrom shinydashboard infoBoxOutput
 mod_dollar_infobox_ui <- function(id){
-  tagList(
-    infoBoxOutput(NS(id, "dollar_metric"))
-  )
+  infoBoxOutput(NS(id, "dollar_metric"))
 }
 
 #' dollar_infobox Server Functions
@@ -24,7 +22,7 @@ mod_dollar_infobox_server <- function(id, box_title, dollar_value){
         box_title,
         paste0(scales::dollar(dollar_value())),
         icon = shiny::icon("dollar-sign"),
-        color = "aqua",
+        color = "light-blue",
         fill = TRUE
       )
     })
