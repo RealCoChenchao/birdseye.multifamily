@@ -9,16 +9,33 @@
 #' @importFrom shiny NS tagList
 mod_pefm_infoboxes_ui <- function(id){
   ns <- NS(id)
-  Stack(
-    horizontal = TRUE,
-    tokens = list(childrenGap = 20),
-    makesimpleCard(mod_dollar_infobox_ui(NS(id, "rent"))),
-    makesimpleCard(mod_pct_infobox_ui(NS(id, "occupancy"))),
-    makesimpleCard(mod_dollar_infobox_ui(NS(id, "revenue"))),
-    makesimpleCard(mod_pct_infobox_ui(NS(id, "rent_growth_3month"))),
-    makesimpleCard(mod_pct_infobox_ui(NS(id, "rent_growth_6month"))),
-    makesimpleCard(mod_pct_infobox_ui(NS(id, "rent_growth_12month")))
+  makesimpleCard(
+    Stack(
+    tokens = list(childrenGap = 5),
+    Stack(
+      horizontal = TRUE,
+      tokens = list(childrenGap = 20),
+      makesimpleCard(mod_dollar_infobox_ui(NS(id, "rent")), size = 6),
+      makesimpleCard(mod_pct_infobox_ui(NS(id, "occupancy")), size = 6),
+      makesimpleCard(mod_dollar_infobox_ui(NS(id, "revenue")), size = 6)
+    ),
+    Stack(
+      horizontal = TRUE,
+      tokens = list(childrenGap = 20),
+      makesimpleCard(mod_pct_infobox_ui(NS(id, "rent_growth_3month")), size = 6),
+      makesimpleCard(mod_pct_infobox_ui(NS(id, "rent_growth_6month")), size = 6),
+      makesimpleCard(mod_pct_infobox_ui(NS(id, "rent_growth_12month")), size = 6)
+    ),
+    Stack(
+      horizontal = TRUE,
+      tokens = list(childrenGap = 20),
+      makesimpleCard(mod_pct_infobox_ui(NS(id, "revenue_growth_3month")), size = 6),
+      makesimpleCard(mod_pct_infobox_ui(NS(id, "revenue_growth_6month")), size = 6),
+      makesimpleCard(mod_pct_infobox_ui(NS(id, "revenue_growth_12month")), size = 6)
+    )
   )
+  )
+
 }
 
 #' pefm_infoboxes Server Functions
@@ -33,6 +50,9 @@ mod_pefm_infoboxes_server <- function(id, pefm_df){
     mod_pct_infobox_server("rent_growth_3month", "3-Month Rent Growth", reactive({pefm_df()$mean_effective_rent_per_sf_3_month_growth}))
     mod_pct_infobox_server("rent_growth_6month", "6-Month Rent Growth", reactive({pefm_df()$mean_effective_rent_per_sf_6_month_growth}))
     mod_pct_infobox_server("rent_growth_12month", "12-Month Rent Growth", reactive({pefm_df()$mean_effective_rent_per_sf_12_month_growth}))
+    mod_pct_infobox_server("revenue_growth_3month", "3-Month RPU Growth", reactive({pefm_df()$mean_revenue_per_unit_3_month_growth}))
+    mod_pct_infobox_server("revenue_growth_6month", "6-Month RPU Growth", reactive({pefm_df()$mean_revenue_per_unit_6_month_growth}))
+    mod_pct_infobox_server("revenue_growth_12month", "12-Month RPU Growth", reactive({pefm_df()$mean_revenue_per_unit_12_month_growth}))
   })
 }
 
