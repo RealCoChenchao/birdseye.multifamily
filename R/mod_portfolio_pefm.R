@@ -42,14 +42,32 @@ mod_portfolio_pefm_ui <- function(id){
 mod_portfolio_pefm_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+    real_estate_db <- make_pool()
+
     googlesheets4::gs4_deauth()
     googlesheets4::gs4_auth(cache = ".secrets",
                             email = TRUE)
     realco_operating_property <- googlesheets4::read_sheet("1lnP1ERj3pjtMtiArTfn4YD-eSKNPkHCxjibW6l4jvrg")
 
-    mod_portfolio_pefm_table_server("portfolio_pefm")
-    mod_portfolio_nearby_map_server("portfolio_nearby")
-    mod_portfolio_nearby_table_server("portfolio_nearby")
+    realco_property_pefm <- select_property_pefm(real_estate_db = real_estate_db,
+                                                 selected_projid = realco_operating_property$projid)
+    mod_portfolio_pefm_table_server("portfolio_pefm", reactive({realco_property_pefm}))
+
+    observe({
+      req(input$portfolio_pefm_rows_selected)
+      selected_property <- realco_property_pefm[input$portfolio_pefm_rows_selected,]
+      print(selected_property[[1]])
+      nearby_boundary <- reactive({
+        get_surrounding_sf
+      })
+      mod_portfolio_nearby_map_server("portfolio_nearby",
+                                      selected_property,
+                                      nearby_boundary,
+                                      nearby_property)
+      mod_portfolio_nearby_table_server("portfolio_nearby")
+    })
+
+
   })
 }
 

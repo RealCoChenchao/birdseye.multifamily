@@ -21,6 +21,7 @@ mod_portfolio_pefm_table_server <- function(id, portfolio_table){
     output$pefm_table <-
       DT::renderDataTable(datatable(portfolio_table(),
                                     extensions = 'Buttons',
+                                    selection = 'single',
                                     options = list(
                                       dom = 'Blfrtip',
                                       buttons = c('copy', 'csv', 'excel', 'pdf', 'print')
