@@ -3,8 +3,74 @@
 #' @description A fct function
 #'
 #' @return The return value, if any, from executing the function.
-#'
+#' @importFrom leaflet awesomeIconList
 #' @noRd
+
+dplyr_summarize_property_pefm <- function(selected_property_pefm){
+  selected_property_pefm %>%
+    dplyr::group_by(month) %>%
+    dplyr::summarise(
+      mean_occupancy = weighted.mean(occupancy, quantity, na.rm = TRUE),
+      mean_occupancy_3_month_change = weighted.mean(occupancy_3_month_change, quantity, na.rm = TRUE),
+      mean_occupancy_6_month_change = weighted.mean(occupancy_6_month_change, quantity, na.rm = TRUE),
+      mean_occupancy_12_month_change = weighted.mean(occupancy_12_month_change, quantity, na.rm = TRUE),
+      mean_occupancy_24_month_change = weighted.mean(occupancy_24_month_change, quantity, na.rm = TRUE),
+      mean_occupancy_36_month_change = weighted.mean(occupancy_36_month_change, quantity, na.rm = TRUE),
+
+      mean_effective_rent_per_sq_ft = weighted.mean(effective_rent_per_sq_ft, quantity * areaperunit, na.rm = TRUE),
+      mean_effective_rent_per_sf_3_month_growth = weighted.mean(effective_rent_per_sf_3_month_growth, quantity * areaperunit, na.rm = TRUE),
+      mean_effective_rent_per_sf_6_month_growth = weighted.mean(effective_rent_per_sf_6_month_growth, quantity * areaperunit, na.rm = TRUE),
+      mean_effective_rent_per_sf_12_month_growth = weighted.mean(effective_rent_per_sf_12_month_growth, quantity * areaperunit, na.rm = TRUE),
+      mean_effective_rent_per_sf_24_month_growth = weighted.mean(effective_rent_per_sf_24_month_growth, quantity * areaperunit, na.rm = TRUE),
+      mean_effective_rent_per_sf_36_month_growth = weighted.mean(effective_rent_per_sf_36_month_growth, quantity * areaperunit, na.rm = TRUE),
+
+      mean_revenue_per_unit = weighted.mean(revenue_per_unit, quantity, na.rm = TRUE),
+      mean_revenue_per_unit_3_month_growth = weighted.mean(revenue_per_unit_3_month_growth, quantity, na.rm = TRUE),
+      mean_revenue_per_unit_6_month_growth = weighted.mean(revenue_per_unit_6_month_growth, quantity, na.rm = TRUE),
+      mean_revenue_per_unit_12_month_growth = weighted.mean(revenue_per_unit_12_month_growth, quantity, na.rm = TRUE),
+      mean_revenue_per_unit_24_month_growth = weighted.mean(revenue_per_unit_24_month_growth, quantity, na.rm = TRUE),
+      mean_revenue_per_unit_36_month_growth = weighted.mean(revenue_per_unit_36_month_growth, quantity, na.rm = TRUE)
+    ) %>%
+    dplyr::ungroup()
+}
+
+format_property_pefm_info <- function(selected_roperty_pefm_info){
+  subset_selected_roperty_pefm_info <- selected_roperty_pefm_info %>%
+    rename(effective_rent_per_sf = effective_rent_per_sq_ft) %>%
+    tidyr::pivot_longer(cols = c(contains("effective_rent_per_sf"),
+                                 contains("revenue_per_unit"),
+                                 contains("occupancy")),
+                        names_to = "performance_metric") %>%
+    tidyr::pivot_wider(names_from = property_group,
+                       values_from = "value") %>%
+    dplyr::mutate(id = as.character(row_number()))
+  subset_selected_roperty_pefm_info %>%
+    dplyr::filter(!performance_metric %in% c("effective_rent_per_sf", "revenue_per_unit")) %>%
+    dplyr::mutate(performance_metric = format_metric_name(performance_metric)) %>%
+    dplyr::mutate_if(is.numeric,
+                     funs(
+                       ifelse(is.na(.),
+                              "",
+                              scales::percent(., accuracy = .1)))) %>%
+    dplyr::bind_rows(subset_selected_roperty_pefm_info %>%
+                       dplyr::filter(performance_metric %in% c("effective_rent_per_sf", "revenue_per_unit")) %>%
+                       dplyr::mutate(performance_metric = format_metric_name(performance_metric)) %>%
+                       dplyr::mutate_if(is.numeric,
+                                        funs(
+                                          ifelse(is.na(.),
+                                                 "",
+                                                 scales::dollar(., accuracy = .01))))) %>%
+    dplyr::arrange(as.numeric(id)) %>%
+    dplyr::rename(`Performance Metric` = performance_metric) %>%
+    dplyr::select(-id) %>%
+    knitr::kable() %>%
+    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                              font_size = 13) %>%
+    kableExtra::pack_rows("MF Performance Metrics", 1, 21,
+                          label_row_css = "background-color: #12395b; color: #fff;")  %>%
+    kableExtra::column_spec(column = 1, bold = TRUE)
+}
+
 format_axio_mkt_metric_tbl <- function(metric_tbl){
   rename_tbl <- metric_tbl %>%
     dplyr::rename(
@@ -27,8 +93,8 @@ format_axio_mkt_metric_tbl <- function(metric_tbl){
   rename_tbl
 }
 
-icons <- awesomeIconList(
-  axio_pipeline = makeAwesomeIcon(icon = 'building',
+icons <- leaflet::awesomeIconList(
+  axio_pipeline = leaflet::makeAwesomeIcon(icon = 'building',
                                   library = 'fa',
                                   markerColor = "lightred")
 )

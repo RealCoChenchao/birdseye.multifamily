@@ -49,22 +49,85 @@ mod_portfolio_pefm_server <- function(id){
                             email = TRUE)
     realco_operating_property <- googlesheets4::read_sheet("1lnP1ERj3pjtMtiArTfn4YD-eSKNPkHCxjibW6l4jvrg")
 
+    axio_property_comps <- sf::read_sf(real_estate_db,
+                                       query = "SELECT DISTINCT projid, geometry FROM axio_property_comps")
     realco_property_pefm <- select_property_pefm(real_estate_db = real_estate_db,
                                                  selected_projid = realco_operating_property$projid)
     mod_portfolio_pefm_table_server("portfolio_pefm", reactive({realco_property_pefm}))
 
     observe({
       req(input$portfolio_pefm_rows_selected)
+
       selected_property <- realco_property_pefm[input$portfolio_pefm_rows_selected,]
-      print(selected_property[[1]])
+      # print(selected_property[[1]])
       nearby_boundary <- reactive({
-        get_surrounding_sf
+        rcUtility::get_surrounding_sf(selected_property)
+      })
+
+      nearby_property <- reactive({
+        comps_surrounding <- sf::st_join(axio_property_comps,
+                                         nearby_boundary(),
+                                         join = st_covered_by,
+                                         left = FALSE)
+
       })
       mod_portfolio_nearby_map_server("portfolio_nearby",
                                       selected_property,
                                       nearby_boundary,
                                       nearby_property)
-      mod_portfolio_nearby_table_server("portfolio_nearby")
+
+      selected_analytics_all <- reactive({
+
+          comps_and_property <- tbl(real_estate_db, "axio_property_pefm") %>%
+            dpyr::filter(projid %in% nearby_property()$projid) %>%
+            dpyr::filter(month > max(month) - months(36)) %>%
+            dpyr::collect()
+
+          property_pefm <- comps_and_property %>%
+            dplyr::filter(projid == selected_property$projid)%>%
+            dplyr::mutate(property_group = selected_property$name_axio) %>%
+            dplyr::select(names(comps))
+
+          nearby_pefm <- comps_and_property %>%
+            dplyr_summarize_property_pefm() %>%
+            dplyr::rename_all(~stringr::str_replace(., "^mean_", "")) %>%
+            dplyr::mutate(property_group = "Properties Nearby")
+
+          submarket_pefm <- tbl(real_estate_db, "axio_submkt_stable_pefm") %>%
+            dplyr::filter(marketname == selected_property$marketname,
+                          submarket == selected_property$submarket) %>%
+            dplyr::filter(month > max(month) - months(36)) %>%
+            dplyr::collect() %>%
+            dplyr::rename_all(~stringr::str_replace(., "^mean_", "")) %>%
+            dplyr::mutate(property_group = "Submarket") %>%
+            dplyr::select(names(comps))
+
+          market_pefm <- tbl(real_estate_db, "axio_mkt_stable_pefm") %>%
+            dplyr::filter(GEOID == !!analytics_selected_geoid()) %>%
+            dplyr::filter(month > max(month) - months(36)) %>%
+            dplyr::collect() %>%
+            dplyr::rename_all(~stringr::str_replace(., "^mean_", "")) %>%
+            dplyr::mutate(property_group = "Market") %>%
+            dplyr::select(names(comps))
+
+          national_pefm <- tbl(real_estate_db, "axio_national_stable_pefm") %>%
+            dplyr::filter(month > max(month) - months(36)) %>%
+            dplyr::collect() %>%
+            dplyr::rename_all(~stringr::str_replace(., "^mean_", "")) %>%
+            dplyr::mutate(property_group = "National") %>%
+            dplyr::select(names(comps))
+
+          selected_analytics_all <- dplyr::bind_rows(
+            property_pefm,
+            nearby_pefm,
+            submarket_pefm,
+            market_pefm,
+            national_pefm)
+
+          selected_analytics_all
+      })
+
+      mod_portfolio_nearby_table_server("portfolio_nearby", selected_analytics_all)
     })
 
 
