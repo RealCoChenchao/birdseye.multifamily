@@ -140,3 +140,39 @@ addPopupTexts <- function(sf_df){
                                          "Average Revenue/Unit 1-Month Growth: ", tidyr::replace_na(percent(mean_revenue_per_unit_1_month_growth, accuracy = 0.01), "N/A")))
   }
 }
+
+addPropertyPefmPopupTexts <- function(sf_df){
+  sf_df %>%
+    dplyr::mutate(popup_text = paste0(
+      # "Name: ", replace_na(name, "N/A"), "<br>",
+      # "Address: ", replace_na(address, ""), ", ", replace_na(city, ""),
+      # ifelse(is.na(state), "", ", "), replace_na(state, ""), " ", replace_na(zip, ""), "<br>",
+      # "Year Built: ", replace_na(as.character(yearbuilt), "N/A"), "<br>",
+      # "Building Floors: ", replace_na(as.character(level), "N/A"), "<br>",
+      "Property Market Grace: ", replace_na(property_market_grade, "N/A"), "<br>",
+      "Property Submarket Grace: ", replace_na(property_submarket_grade, "N/A"), "<br>",
+      "Total Units: ", replace_na(as.character(quantity), "N/A"), "<br>",
+      "Status: ", replace_na(status, "N/A"), "<br>",
+      "Effective Rent/SqFt: ", tidyr::replace_na(scales::dollar(effective_rent_per_sq_ft, accuracy = 0.01), "N/A"), "<br>",
+      "Rent 1-Month Growth: ", tidyr::replace_na(percent(effective_rent_per_sf_1_month_growth, accuracy = 0.01), "N/A"), "<br>",
+      "Rent 3-Month Growth: ", tidyr::replace_na(percent(effective_rent_per_sf_3_month_growth, accuracy = 0.01), "N/A"), "<br>",
+      "Rent 6-Month Growth: ", tidyr::replace_na(percent(effective_rent_per_sf_6_month_growth, accuracy = 0.01), "N/A"), "<br>",
+      "Rent 12-Month Growth: ", tidyr::replace_na(percent(effective_rent_per_sf_12_month_growth, accuracy = 0.01), "N/A"), "<br>",
+      "Rent 24-Month Growth: ", tidyr::replace_na(percent(effective_rent_per_sf_24_month_growth, accuracy = 0.01), "N/A"), "<br>",
+      "Rent 36-Month Growth: ", tidyr::replace_na(percent(effective_rent_per_sf_36_month_growth, accuracy = 0.01), "N/A"), "<br>",
+      "Occupancy: ", tidyr::replace_na(percent(occupancy, accuracy = 0.01), "N/A"), "<br>",
+      "Occupancy 1-Month Change: ", tidyr::replace_na(percent(occupancy_1_month_change, accuracy = 0.01), "N/A"), "<br>",
+      "Occupancy 3-Month Change: ", tidyr::replace_na(percent(occupancy_3_month_change, accuracy = 0.01), "N/A"), "<br>",
+      "Occupancy 6-Month Change: ", tidyr::replace_na(percent(occupancy_6_month_change, accuracy = 0.01), "N/A"), "<br>",
+      "Occupancy 12-Month Change: ", tidyr::replace_na(percent(occupancy_12_month_change, accuracy = 0.01), "N/A"), "<br>",
+      "Occupancy 24-Month Change: ", tidyr::replace_na(percent(occupancy_24_month_change, accuracy = 0.01), "N/A"), "<br>",
+      "Occupancy 36-Month Change: ", tidyr::replace_na(percent(occupancy_36_month_change, accuracy = 0.01), "N/A"), "<br>",
+      "Average Revenue/Unit: ", tidyr::replace_na(scales::dollar(revenue_per_unit, accuracy = 1), "N/A"), "<br>",
+      "RPU 1-Month Growth: ", tidyr::replace_na(percent(revenue_per_unit_1_month_growth, accuracy = 0.01), "N/A"), "<br>",
+      "RPU 3-Month Growth: ", tidyr::replace_na(percent(revenue_per_unit_3_month_growth, accuracy = 0.01), "N/A"), "<br>",
+      "RPU 6-Month Growth: ", tidyr::replace_na(percent(revenue_per_unit_6_month_growth, accuracy = 0.01), "N/A"), "<br>",
+      "RPU 12-Month Growth: ", tidyr::replace_na(percent(revenue_per_unit_12_month_growth, accuracy = 0.01), "N/A"), "<br>",
+      "RPU 24-Month Growth: ", tidyr::replace_na(percent(revenue_per_unit_24_month_growth, accuracy = 0.01), "N/A"), "<br>",
+      "RPU 36-Month Growth: ", tidyr::replace_na(percent(revenue_per_unit_36_month_growth, accuracy = 0.01), "N/A"), "<br>"
+      ))
+}

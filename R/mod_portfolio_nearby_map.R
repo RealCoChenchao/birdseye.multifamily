@@ -9,7 +9,7 @@
 #' @importFrom shiny NS tagList
 mod_portfolio_nearby_map_ui <- function(id){
   ns <- NS(id)
-  leafletOutput(NS(id, "property_nearby"))
+  leafletOutput(NS(id, "map"))
 }
 
 #' portfolio_nearby_map Server Functions
@@ -32,8 +32,22 @@ mod_portfolio_nearby_map_server <- function(id, property, nearby_boundary, nearb
         addProviderTiles(provider = "Esri.WorldImagery", group = "Satellite Map") %>%
         addTiles(urlTemplate = transport_layer, group = "Transit Map") %>%
         addTiles(urlTemplate = hybrid_layer, group = "Hybrid Map") %>%
-        addMarkers(property) %>%
-        addMarkers(nearby_property)%>%
+        addAwesomeMarkers(data = property,
+                          icon = makeAwesomeIcon(icon = "star",
+                                                 library = "fa",
+                                                 markerColor = "orange"),
+                          label = ~name,
+                          popup = ~popup_text) %>%
+        addAwesomeMarkers(data = nearby_property(),
+                          icon = makeAwesomeIcon(icon = 'building',
+                                                library = 'fa',
+                                                markerColor = "blue"),
+                          label = ~name,
+                          popup = ~popup_text) %>%
+        addPolygons(data = nearby_boundary(),
+                    label = "drive time boundary",
+                    color = "#ac080e",
+                    weight = 0.5) %>%
         flyToBounds(bounds[1], bounds[2], bounds[3], bounds[4]) %>%
         addTiles(urlTemplate = "", attribution = "") %>%
         addLayersControl(baseGroups = c("Contrast Map",

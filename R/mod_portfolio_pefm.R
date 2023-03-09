@@ -47,7 +47,8 @@ mod_portfolio_pefm_server <- function(id){
     googlesheets4::gs4_deauth()
     googlesheets4::gs4_auth(cache = ".secrets",
                             email = TRUE)
-    realco_operating_property <- googlesheets4::read_sheet("1lnP1ERj3pjtMtiArTfn4YD-eSKNPkHCxjibW6l4jvrg")
+    realco_operating_property <- googlesheets4::read_sheet("1lnP1ERj3pjtMtiArTfn4YD-eSKNPkHCxjibW6l4jvrg") %>%
+      dplyr::select(projid)
 
     axio_property_comps <- sf::read_sf(real_estate_db,
                                        query = "SELECT DISTINCT projid, geometry FROM axio_property_comps")
@@ -58,7 +59,12 @@ mod_portfolio_pefm_server <- function(id){
     observe({
       req(input$`portfolio_pefm-pefm_table_rows_selected`)
 
-      selected_property <- realco_operating_property[input$`portfolio_pefm-pefm_table_rows_selected`,]
+      selected_property <- realco_property_pefm[input$`portfolio_pefm-pefm_table_rows_selected`,] %>%
+        dplyr::inner_join(axio_property_comps,
+                          by = c("projid")) %>%
+        sf::st_as_sf() %>%
+        addPropertyPefmPopupTexts()
+
       nearby_boundary <- reactive({
         rcUtility::get_surrounding_sf(selected_property)
       })
@@ -67,9 +73,20 @@ mod_portfolio_pefm_server <- function(id){
         comps_surrounding <- sf::st_join(axio_property_comps,
                                          nearby_boundary(),
                                          join = st_covered_by,
-                                         left = FALSE)
+                                         left = FALSE) %>%
+          dplyr::filter(projid != selected_property$projid)
+
+        comps_surrounding_pefm <- select_property_pefm(real_estate_db = real_estate_db,
+                                                       selected_projid = comps_surrounding$projid)
+
+        comps_surrounding %>%
+          dplyr::inner_join(comps_surrounding_pefm,
+                            by = c("projid")) %>%
+          sf::st_as_sf() %>%
+          addPropertyPefmPopupTexts()
 
       })
+
       mod_portfolio_nearby_map_server("portfolio_nearby",
                                       selected_property,
                                       nearby_boundary,
@@ -79,7 +96,7 @@ mod_portfolio_pefm_server <- function(id){
 
           comps_and_property <- tbl(real_estate_db, "axio_property_pefm") %>%
             dplyr::filter(projid %in% nearby_property()$projid) %>%
-            dplyr::filter(month > max(month) - months(36)) %>%
+            dplyr::filter(month == max(month)) %>%
             dplyr::collect()
 
           nearby_pefm <- comps_and_property %>%
@@ -95,7 +112,7 @@ mod_portfolio_pefm_server <- function(id){
           submarket_pefm <- tbl(real_estate_db, "axio_submkt_stable_pefm") %>%
             dplyr::filter(marketname == !!selected_property$marketname,
                           submarket == !!selected_property$submarket) %>%
-            dplyr::filter(month > max(month) - months(36)) %>%
+            dplyr::filter(month == max(month)) %>%
             dplyr::collect() %>%
             dplyr::rename_all(~stringr::str_replace(., "^mean_", "")) %>%
             dplyr::mutate(property_group = "Submarket") %>%
@@ -103,14 +120,14 @@ mod_portfolio_pefm_server <- function(id){
 
           market_pefm <- tbl(real_estate_db, "axio_mkt_stable_pefm") %>%
             dplyr::filter(marketname == !!selected_property$marketname) %>%
-            dplyr::filter(month > max(month) - months(36)) %>%
+            dplyr::filter(month == max(month)) %>%
             dplyr::collect() %>%
             dplyr::rename_all(~stringr::str_replace(., "^mean_", "")) %>%
             dplyr::mutate(property_group = "Market") %>%
             dplyr::select(names(nearby_pefm))
 
           national_pefm <- tbl(real_estate_db, "axio_national_stable_pefm") %>%
-            dplyr::filter(month > max(month) - months(36)) %>%
+            dplyr::filter(month == max(month)) %>%
             dplyr::collect() %>%
             dplyr::rename_all(~stringr::str_replace(., "^mean_", "")) %>%
             dplyr::mutate(property_group = "National") %>%

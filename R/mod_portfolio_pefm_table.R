@@ -25,11 +25,12 @@ mod_portfolio_pefm_table_server <- function(id, portfolio_table){
                                     options = list(
                                       dom = 'Blfrtip',
                                       buttons = c('copy', 'csv', 'excel', 'pdf', 'print')
-                                    )) %>%
-                            DT::formatPercentage(c("Rent 3 Month Growth %",
-                                                   "Occupancy 3 Month Change %",
-                                                   "Revenue Per Unit 3 Month Growth %"),
-                                                 2),
+                                    )) ,
+                          # %>%
+                          #   DT::formatPercentage(c("Rent 3 Month Growth %",
+                          #                          "Occupancy 3 Month Change %",
+                          #                          "Revenue Per Unit 3 Month Growth %"),
+                          #                        2),
                           options = list(scrollX = TRUE),
                           rownames = FALSE)
   })
