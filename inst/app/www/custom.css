@@ -8,6 +8,7 @@
 
 .header {
   grid-area: header;
+  color: #CC5500;
   background-color: #fff;
   padding: 6px 0px 6px 10px;
   display: flex;
@@ -15,6 +16,7 @@
 
 .main {
   grid-area: main;
+  color: #CC5500;
   background-color: #faf9f8;
   padding-left: 32px;
   padding-right: 32px;
@@ -25,6 +27,7 @@
 
 .footer {
   grid-area: footer;
+  color: #CC5500;
   background-color: #f3f2f1;
   padding: 12px 20px;
 }
@@ -32,7 +35,7 @@
 .sidenav {
   grid-area: sidenav;
   background-color: #fff;
-  color: #12395b;
+  color: #CC5500;
   padding: 25px;
 }
 

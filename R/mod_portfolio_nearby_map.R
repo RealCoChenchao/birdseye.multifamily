@@ -7,6 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+#' @importFrom sf st_bbox
 mod_portfolio_nearby_map_ui <- function(id){
   ns <- NS(id)
   leafletOutput(NS(id, "map"))

@@ -74,6 +74,7 @@ navigation <- Nav(
   groups = list(
     list(links = list(
       list(name = 'Home', url = '#!/', key = 'home', icon = 'Home'),
+      list(name = 'Portfolio Overview', url = '#!/portfolio', key = 'portfolio', icon = 'MapLayers'),
       list(name = 'Market Intelligence', url = '#!/market', key = 'market', icon = 'MapLayers'),
       list(name = 'Market Comparison', url = '#!/compare', key = 'compare', icon = 'BIDashboard'),
       list(name = 'Opportunity Lens', url = '#!/opportunity', key = 'opportunity', icon = 'FunnelChart'),
@@ -91,8 +92,7 @@ navigation <- Nav(
 )
 
 header <- tagList(
-  img(src = "www/usaa_logo.png", class = "logo"),
-  # div(Text(variant = "xLarge", "RADR"), class = "title")
+  img(src = "www/affinius_logo.png", class = "logo"),
 )
 
 footer <- Stack(
@@ -100,7 +100,7 @@ footer <- Stack(
   horizontalAlign = 'space-between',
   tokens = list(childrenGap = 20),
   Text(variant = "medium", "Built with ❤ by Chenchao Zang", block=TRUE),
-  Text(variant = "medium", nowrap = FALSE, "If you'd like to learn more, reach out to us at chenchao.zang@usrealco.com"),
+  Text(variant = "medium", nowrap = FALSE, "If you'd like to learn more, reach out to us at chenchao.zang@affiniuscapital.com"),
   Text(variant = "medium", nowrap = FALSE, "All rights reserved.")
 )
 
@@ -114,18 +114,24 @@ layout <- function(mainUI){
 }
 
 card1 <- makeCard(
+  "Portfolio Overview",
+  div(
+    Text("Centralized overview of holdings and their surrounding comps")
+  ))
+
+card2 <- makeCard(
   "Market Intelligence",
   div(
     Text("One stop to understand the rent growth, occupany change and revenue growth for a market")
   ))
 
-card2 <- makeCard(
+card3 <- makeCard(
   "Market Comparison",
   div(
     Text("Compare markets in a variety of combination of period and data cut")
   ))
 
-card3 <- makeCard(
+card4 <- makeCard(
   "Opportunity Lens",
   div(
     Text("Explore properties whose current rent is below what it is delivered")
@@ -134,11 +140,18 @@ card3 <- makeCard(
 
 home_page <- makePage(
   "This is a Shiny Application built for tracking multifamily performance",
-  "USAA Real Estate Research + Shiny = Multifamily Performance Dashboard",
+  "Affinius Capital Research + Shiny = Multifamily Performance Dashboard",
   Stack(horizontal = TRUE,
         card1,
         card2,
+        card3,
         card3)
+)
+
+portfolio_page <- makePage(
+  "Portfolio Overview",
+  "Watching Operating Properties",
+  div(mod_portfolio_pefm_ui("operating"))
 )
 
 market_page <- makePage(
@@ -161,6 +174,7 @@ opportunity_page <- makePage(
 
 router <- make_router(
   route("/", home_page),
+  route("portfolio", portfolio_page),
   route("market", market_page),
   route("compare", compare_page),
   route("opportunity", opportunity_page))

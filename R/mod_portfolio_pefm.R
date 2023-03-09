@@ -7,6 +7,8 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+#' @importFrom rcAnalyticalMF select_property_pefm
+#' @importFrom sf st_covered_by
 mod_portfolio_pefm_ui <- function(id){
   ns <- NS(id)
   fluentPage(
@@ -50,8 +52,10 @@ mod_portfolio_pefm_server <- function(id){
     realco_operating_property <- googlesheets4::read_sheet("1lnP1ERj3pjtMtiArTfn4YD-eSKNPkHCxjibW6l4jvrg") %>%
       dplyr::select(projid)
 
-    axio_property_comps <- sf::read_sf(real_estate_db,
-                                       query = "SELECT DISTINCT projid, geometry FROM axio_property_comps")
+    axio_property_comps <- rcAnalyticalMF::select_property() %>%
+      dplyr::select(projid, name, address,
+                    city, state, zip,
+                    yearbuilt, level,geometry)
     realco_property_pefm <- select_property_pefm(real_estate_db = real_estate_db,
                                                  selected_projid = realco_operating_property$projid)
     mod_portfolio_pefm_table_server("portfolio_pefm", reactive({realco_property_pefm}))
@@ -95,7 +99,7 @@ mod_portfolio_pefm_server <- function(id){
       selected_analytics_all <- reactive({
 
           comps_and_property <- tbl(real_estate_db, "axio_property_pefm") %>%
-            dplyr::filter(projid %in% nearby_property()$projid) %>%
+            dplyr::filter(projid %in% !!nearby_property()$projid) %>%
             dplyr::filter(month == max(month)) %>%
             dplyr::collect()
 
@@ -106,7 +110,7 @@ mod_portfolio_pefm_server <- function(id){
 
           property_pefm <- comps_and_property %>%
             dplyr::filter(projid == selected_property$projid)%>%
-            dplyr::mutate(property_group = selected_property$name_axio) %>%
+            dplyr::mutate(property_group = selected_property$name) %>%
             dplyr::select(names(nearby_pefm))
 
           submarket_pefm <- tbl(real_estate_db, "axio_submkt_stable_pefm") %>%

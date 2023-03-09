@@ -144,11 +144,11 @@ addPopupTexts <- function(sf_df){
 addPropertyPefmPopupTexts <- function(sf_df){
   sf_df %>%
     dplyr::mutate(popup_text = paste0(
-      # "Name: ", replace_na(name, "N/A"), "<br>",
-      # "Address: ", replace_na(address, ""), ", ", replace_na(city, ""),
-      # ifelse(is.na(state), "", ", "), replace_na(state, ""), " ", replace_na(zip, ""), "<br>",
-      # "Year Built: ", replace_na(as.character(yearbuilt), "N/A"), "<br>",
-      # "Building Floors: ", replace_na(as.character(level), "N/A"), "<br>",
+      "Name: ", replace_na(name, "N/A"), "<br>",
+      "Address: ", replace_na(address, ""), ", ", replace_na(city, ""),
+      ifelse(is.na(state), "", ", "), replace_na(state, ""), " ", replace_na(zip, ""), "<br>",
+      "Year Built: ", replace_na(as.character(yearbuilt), "N/A"), "<br>",
+      "Building Floors: ", replace_na(as.character(level), "N/A"), "<br>",
       "Property Market Grace: ", replace_na(property_market_grade, "N/A"), "<br>",
       "Property Submarket Grace: ", replace_na(property_submarket_grade, "N/A"), "<br>",
       "Total Units: ", replace_na(as.character(quantity), "N/A"), "<br>",

@@ -44,6 +44,7 @@ drop_nulls <- function(x) {
 #' @export
 #'
 #' @examples
+#' @import paws
 make_pool <- function(){
   pool::dbPool(
     drv      = RPostgres::Postgres(),
