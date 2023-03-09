@@ -28,11 +28,11 @@ mod_portfolio_pefm_ui <- function(id){
                                    snapToStep = TRUE),
                  mod_portfolio_nearby_map_ui(NS(id, "portfolio_nearby"))
                ),
-               size = 4,
+               size = 8,
                style = "max-height: 750px;"),
       makeCard("Performance Comparison",
                mod_portfolio_nearby_table_ui(NS(id, "portfolio_nearby")),
-               size = 8,
+               size = 4,
                style = "max-height: 750px; overflow: auto")
     )
   )
