@@ -9,7 +9,7 @@
 #' @importFrom shiny NS tagList
 mod_portfolio_nearby_table_ui <- function(id){
   ns <- NS(id)
-  tableOutput("pefm_analytics_kable")
+  tableOutput(NS(id, "pefm_analytics_kable"))
 }
 
 #' portfolio_nearby_table Server Functions
@@ -19,9 +19,12 @@ mod_portfolio_nearby_table_server <- function(id, selected_analytics){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    format_property_pefm_info(
-      selected_analytics()
-    )
+    output$pefm_analytics_kable <- function() {
+      format_property_pefm_info(
+        selected_analytics()
+      )
+    }
+
   })
 }
 

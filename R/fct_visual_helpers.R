@@ -6,6 +6,10 @@
 #' @importFrom leaflet awesomeIconList
 #' @noRd
 
+format_metric_name <- function(string){
+  str_to_title(str_replace_all(str_to_sentence(string), "_", " "))
+}
+
 dplyr_summarize_property_pefm <- function(selected_property_pefm){
   selected_property_pefm %>%
     dplyr::group_by(month) %>%

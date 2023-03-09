@@ -79,9 +79,9 @@ mod_portfolio_pefm_server <- function(id){
       selected_analytics_all <- reactive({
 
           comps_and_property <- tbl(real_estate_db, "axio_property_pefm") %>%
-            dpyr::filter(projid %in% nearby_property()$projid) %>%
-            dpyr::filter(month > max(month) - months(36)) %>%
-            dpyr::collect()
+            dplyr::filter(projid %in% nearby_property()$projid) %>%
+            dplyr::filter(month > max(month) - months(36)) %>%
+            dplyr::collect()
 
           property_pefm <- comps_and_property %>%
             dplyr::filter(projid == selected_property$projid)%>%
