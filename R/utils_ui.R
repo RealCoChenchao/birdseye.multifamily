@@ -70,6 +70,7 @@ makesimpleCard <- function(content, size = 12, style = "") {
     content
   )
 }
+# https://blog.lsonline.fr/fluent-ui-core-icons/
 navigation <- Nav(
   groups = list(
     list(links = list(

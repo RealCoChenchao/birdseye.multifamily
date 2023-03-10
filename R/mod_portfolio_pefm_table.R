@@ -19,7 +19,7 @@ mod_portfolio_pefm_table_server <- function(id, portfolio_table){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     output$pefm_table <-
-      DT::renderDataTable(datatable(realco_property_pefm %>%
+      DT::renderDataTable(datatable(portfolio_table() %>%
                                       sf::st_drop_geometry() %>%
                                       dplyr::select(-contains("covid"), -projid) %>%
                                       tidyr::pivot_longer(cols = c(effective_rent_per_sq_ft,

@@ -23,6 +23,7 @@ Imports:
     leaflet.extras,
     lubridate,
     magrittr,
+    mapboxapi,
     paws,
     pins,
     pkgload,
