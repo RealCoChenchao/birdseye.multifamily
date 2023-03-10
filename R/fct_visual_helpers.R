@@ -70,8 +70,8 @@ format_property_pefm_info <- function(selected_roperty_pefm_info){
     knitr::kable() %>%
     kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
                               font_size = 13) %>%
-    kableExtra::pack_rows("MF Performance Metrics", 1, 21,
-                          label_row_css = "background-color: #12395b; color: #fff;")  %>%
+    kableExtra::pack_rows("MF Performance Metrics", 1, 18,
+                          label_row_css = "background-color: #CC5500; color: #fff;")  %>%
     kableExtra::column_spec(column = 1, bold = TRUE)
 }
 

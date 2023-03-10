@@ -74,7 +74,7 @@ navigation <- Nav(
   groups = list(
     list(links = list(
       list(name = 'Home', url = '#!/', key = 'home', icon = 'Home'),
-      list(name = 'Portfolio Overview', url = '#!/portfolio', key = 'portfolio', icon = 'MapLayers'),
+      list(name = 'Portfolio Overview', url = '#!/portfolio', key = 'portfolio', icon = 'MapPinSolid'),
       list(name = 'Market Intelligence', url = '#!/market', key = 'market', icon = 'MapLayers'),
       list(name = 'Market Comparison', url = '#!/compare', key = 'compare', icon = 'BIDashboard'),
       list(name = 'Opportunity Lens', url = '#!/opportunity', key = 'opportunity', icon = 'FunnelChart'),

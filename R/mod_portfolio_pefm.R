@@ -55,19 +55,28 @@ mod_portfolio_pefm_server <- function(id){
     axio_property_comps <- rcAnalyticalMF::select_property() %>%
       dplyr::select(projid, name, address,
                     city, state, zip,
-                    yearbuilt, level,geometry)
+                    yearbuilt, level, geometry)
     realco_property_pefm <- select_property_pefm(real_estate_db = real_estate_db,
-                                                 selected_projid = realco_operating_property$projid)
+                                                 selected_projid = realco_operating_property$projid) %>%
+      dplyr::select(projid, status, quantity,
+                    areaperunit, marketname, submarket,
+                    property_market_grade, property_submarket_grade,
+                    occupancy, effective_rent_per_sq_ft, revenue_per_unit,
+                    starts_with("effective_rent_per_sf_"),
+                    starts_with("occupancy_"),
+                    starts_with("revenue_per_unit_")) %>%
+      dplyr::inner_join(axio_property_comps,
+                        by = c("projid")) %>%
+      sf::st_as_sf() %>%
+      addPropertyPefmPopupTexts()
+
+
     mod_portfolio_pefm_table_server("portfolio_pefm", reactive({realco_property_pefm}))
 
     observe({
       req(input$`portfolio_pefm-pefm_table_rows_selected`)
 
-      selected_property <- realco_property_pefm[input$`portfolio_pefm-pefm_table_rows_selected`,] %>%
-        dplyr::inner_join(axio_property_comps,
-                          by = c("projid")) %>%
-        sf::st_as_sf() %>%
-        addPropertyPefmPopupTexts()
+      selected_property <- realco_property_pefm[input$`portfolio_pefm-pefm_table_rows_selected`,]
 
       nearby_boundary <- reactive({
         rcUtility::get_surrounding_sf(selected_property)
@@ -77,8 +86,7 @@ mod_portfolio_pefm_server <- function(id){
         comps_surrounding <- sf::st_join(axio_property_comps,
                                          nearby_boundary(),
                                          join = st_covered_by,
-                                         left = FALSE) %>%
-          dplyr::filter(projid != selected_property$projid)
+                                         left = FALSE)
 
         comps_surrounding_pefm <- select_property_pefm(real_estate_db = real_estate_db,
                                                        selected_projid = comps_surrounding$projid)
@@ -104,6 +112,7 @@ mod_portfolio_pefm_server <- function(id){
             dplyr::collect()
 
           nearby_pefm <- comps_and_property %>%
+            dplyr::filter(projid != selected_property$projid) %>%
             dplyr_summarize_property_pefm() %>%
             dplyr::rename_all(~stringr::str_replace(., "^mean_", "")) %>%
             dplyr::mutate(property_group = "Properties Nearby")

@@ -19,18 +19,43 @@ mod_portfolio_pefm_table_server <- function(id, portfolio_table){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     output$pefm_table <-
-      DT::renderDataTable(datatable(portfolio_table(),
+      DT::renderDataTable(datatable(realco_property_pefm %>%
+                                      sf::st_drop_geometry() %>%
+                                      dplyr::select(-contains("covid"), -projid) %>%
+                                      tidyr::pivot_longer(cols = c(effective_rent_per_sq_ft,
+                                                                   contains("effective_rent_per_sf"),
+                                                                   contains("revenue_per_unit"),
+                                                                   contains("occupancy")),
+                                                          names_to = "performance_metric") %>%
+                                      dplyr::mutate(performance_metric = format_metric_name(performance_metric)) %>%
+                                      tidyr::pivot_wider(names_from = "performance_metric",
+                                                         values_from = "value") %>%
+                                      dplyr::select(-popup_text) %>%
+                                      dplyr::select(Name = name,
+                                                    Address = address,
+                                                    City = city,
+                                                    State = state,
+                                                    Zip = zip,
+                                                    `Year Built` = yearbuilt,
+                                                    Level = level,
+                                                    Status = status,
+                                                    Units = quantity,
+                                                    Areaperunit = areaperunit,
+                                                    Market = marketname,
+                                                    Submarket = submarket,
+                                                    `Market Grade` = property_market_grade,
+                                                    `Submarket Grade` = property_submarket_grade,
+                                                    everything()),
                                     extensions = 'Buttons',
                                     selection = 'single',
                                     options = list(
                                       dom = 'Blfrtip',
                                       buttons = c('copy', 'csv', 'excel', 'pdf', 'print')
-                                    )) ,
-                          # %>%
-                          #   DT::formatPercentage(c("Rent 3 Month Growth %",
-                          #                          "Occupancy 3 Month Change %",
-                          #                          "Revenue Per Unit 3 Month Growth %"),
-                          #                        2),
+                                    )) %>%
+                            DT::formatPercentage(c(16:21,
+                                                   23:35),
+                                                 2) %>%
+                            DT::formatCurrency(c(15, 22)),
                           options = list(scrollX = TRUE),
                           rownames = FALSE)
   })
